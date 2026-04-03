@@ -57,6 +57,7 @@ QDRANT_PORT=6333
 ---
 
 # Project Layout
+```
 semantic-product-search/
 ├── backend/
 ├── frontend/
@@ -66,7 +67,7 @@ semantic-product-search/
 ├── README.md
 ├── requirements.txt
 └── .gitignore
-
+```
 ---
 
 # API Endpoints
