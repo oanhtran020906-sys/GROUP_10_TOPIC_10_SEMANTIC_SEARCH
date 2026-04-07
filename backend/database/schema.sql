@@ -38,3 +38,9 @@ ON products(category_id);
 
 CREATE INDEX idx_products_brand 
 ON products(brand);
+
+
+CREATE TABLE budgets (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(20) UNIQUE NOT NULL
+);
