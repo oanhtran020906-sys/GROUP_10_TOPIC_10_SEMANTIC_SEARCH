@@ -1,8 +1,6 @@
 DROP DATABASE IF EXISTS semantic_search;
 CREATE DATABASE semantic_search;
-
-DROP TABLE IF EXISTS products;
-DROP TABLE IF EXISTS categories;
+use sematic_search;
 
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
