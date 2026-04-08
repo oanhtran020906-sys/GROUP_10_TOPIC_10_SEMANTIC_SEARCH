@@ -19,11 +19,9 @@ CREATE TABLE products (
 
     price DECIMAL(12, 2) NOT NULL,
 
-    image_url TEXT,
+    image_path TEXT,
 
     description TEXT NOT NULL,
-
-    search_blob TEXT NOT NULL,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
