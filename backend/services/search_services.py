@@ -1,4 +1,17 @@
- # SQL search
+#GENERAL search functions 
+def get_all_categories():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT id, name FROM categories ORDER BY name ASC;")
+        rows = cur.fetchall()
+        return [{"id": r[0], "name": r[1]} for r in rows]
+    finally:
+        cur.close()
+        release_db_connection(conn)
+
+
+# SQL search
 from database.postgres import get_db_connection, release_db_connection
 
 def search_products_sql(query: str, category_id: int = None, min_price: float = None, max_price: float = None):
@@ -44,3 +57,5 @@ def search_products_sql(query: str, category_id: int = None, min_price: float = 
     finally:
         cur.close()
         release_db_connection(conn)
+
+#VECTOR search
