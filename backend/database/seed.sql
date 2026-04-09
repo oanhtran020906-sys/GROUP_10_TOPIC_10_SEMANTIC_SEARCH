@@ -14,6 +14,3 @@ INSERT INTO budgets (name) VALUES
 ('low'),
 ('mid'),
 ('lux');
-
-SELECT * FROM categories;
-SELECT * FROM budgets;

@@ -1,21 +1,26 @@
 DROP DATABASE IF EXISTS semantic_search;
 CREATE DATABASE semantic_search;
-use sematic_search;
 
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
 );
 
+CREATE TABLE budgets (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(20) UNIQUE NOT NULL
+);
+
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
 
     category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
+	budget_id int  REFERENCES budget(id) ON DELETE SET NULL
 
     name VARCHAR(255) NOT NULL,
     brand VARCHAR(100),
 
-    price DECIMAL(12, 2) NOT NULL,
+    price DECIMAL(12, 2) NOT NULL CHECK (price >= 0),
 
     image_path TEXT,
 
@@ -26,8 +31,8 @@ CREATE TABLE products (
 
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
-CREATE INDEX idx_products_search_blob 
-ON products USING gin (search_blob gin_trgm_ops);
+CREATE INDEX idx_products_description
+ON products USING gin (description gin_trgm_ops);
 
 CREATE INDEX idx_products_category_id 
 ON products(category_id);
@@ -35,8 +40,4 @@ ON products(category_id);
 CREATE INDEX idx_products_brand 
 ON products(brand);
 
-
-CREATE TABLE budgets (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(20) UNIQUE NOT NULL
-);
+CREATE INDEX idx_products_name_gin ON products USING gin (name gin_trgm_ops);
