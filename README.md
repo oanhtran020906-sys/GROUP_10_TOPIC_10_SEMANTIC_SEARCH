@@ -80,7 +80,7 @@ Quay lại terminal, chạy dòng dưới để thêm data sample vào database
 python scripts/seed_db.py
 ```
 
-chạy frontend
+### 3.chạy frontend
 ```bash
 cd frontend
 
@@ -88,3 +88,4 @@ npm install
 
 npm run dev
 ```
+Ctrl click vào 'http://localhost:5173/'. Trình duyệt web sẽ hiện lên trang chủ của frontend
