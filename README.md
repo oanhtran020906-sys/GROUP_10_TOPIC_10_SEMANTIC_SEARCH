@@ -79,3 +79,10 @@ Quay lại terminal, chạy dòng dưới để thêm data sample vào database
 ```bash
 python scripts/seed_db.py
 ```
+
+chạy frontend
+```bash
+npm install
+
+npm run dev
+```
