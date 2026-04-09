@@ -1,0 +1,24 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# --- Cấu hình bảo mật (QUAN TRỌNG) ---
+.env
+
+# --- Database & Logs ---
+*.log
+local_db/    
+# Nếu bạn có file sqlite hoặc db cục bộ
+
+# --- Frontend (Node.js) ---
+node_modules/
+dist/
+build/
+.eslintcache
+
+# --- Hệ điều hành ---
+.DS_Store
+Thumbs.db

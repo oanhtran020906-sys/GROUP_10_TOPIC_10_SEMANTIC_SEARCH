@@ -1,4 +1,3 @@
-DROP DATABASE IF EXISTS semantic_search;
 CREATE DATABASE semantic_search;
 
 CREATE TABLE categories (
@@ -15,7 +14,7 @@ CREATE TABLE products (
     id SERIAL PRIMARY KEY,
 
     category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
-	budget_id int  REFERENCES budget(id) ON DELETE SET NULL
+	budget_id int  REFERENCES budgets(id) ON DELETE SET NULL,
 
     name VARCHAR(255) NOT NULL,
     brand VARCHAR(100),
@@ -41,3 +40,6 @@ CREATE INDEX idx_products_brand
 ON products(brand);
 
 CREATE INDEX idx_products_name_gin ON products USING gin (name gin_trgm_ops);
+
+CREATE INDEX idx_products_price ON products(price);
+

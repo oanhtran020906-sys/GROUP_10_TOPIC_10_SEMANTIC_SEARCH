@@ -1,1 +1,27 @@
+# --- Web Framework & Server ---
+fastapi==0.110.0
+uvicorn==0.27.1
+python-multipart==0.0.9    # Hỗ trợ upload ảnh
 
+# --- Database Drivers ---
+psycopg2-binary==2.9.9     # Kết nối PostgreSQL
+qdrant-client==1.8.0       # Kết nối Qdrant Vector DB
+sqlalchemy==2.0.27         # ORM giúp quản lý DB dễ dàng hơn
+
+# --- AI & Machine Learning (Embedding) ---
+# Lựa chọn 1: Dùng OpenAI (Cần API Key)
+openai==1.13.3
+
+# Lựa chọn 2: Dùng Model chạy Local (Miễn phí - Khuyên dùng cho sinh viên)
+sentence-transformers==2.5.1
+torch==2.2.1               # Backend cho sentence-transformers
+
+# --- Image Processing (Cho tính năng Multimodal/Search bằng ảnh) ---
+pillow==10.2.0             # Xử lý file ảnh            
+transformers==4.38.1       # Dùng model CLIP cho tìm kiếm ảnh
+
+# --- Data Handling & Utilities ---
+pandas==2.2.1              # Đọc file CSV và xử lý dữ liệu
+python-dotenv==1.0.1       # Quản lý biến môi trường (API Key, DB Config)
+pydantic==2.6.3            # Validate dữ liệu đầu vào/đầu ra
+pydantic-settings==2.2.1

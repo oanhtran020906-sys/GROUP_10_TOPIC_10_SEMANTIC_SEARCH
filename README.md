@@ -55,6 +55,7 @@ Cài đặt thư viện
 ```bash
 pip install -r requirements.txt
 ```
+Lưu ý cho team: nếu import thư viện gì mới thì bổ sung vào file backend/requirements.txt
 
 ### 2. Triển khai Database
 Nếu bạn đã cài Docker, chỉ cần một câu lệnh duy nhất để dựng Postgres và Qdrant:
@@ -65,3 +66,16 @@ docker-compose up -d
 ```
 
 Lưu ý: Nếu không dùng Docker, bạn phải tự cài Postgres (cổng 5432) và Qdrant (cổng 6333) cục bộ.
+
+Nếu bạn chưa cài Docker. Mở pgAdmin4, mở file database/schema.sql. chạy dòng
+```bash
+CREATE DATABASE semantic_search;
+```
+
+Đổi connection sang sematic_search database, chạy các dòng còn lại.
+
+Quay lại terminal, chạy dòng dưới để thêm data sample vào database
+
+```bash
+python scripts/seed_db.py
+```
