@@ -82,6 +82,8 @@ python scripts/seed_db.py
 
 chạy frontend
 ```bash
+cd frontend
+
 npm install
 
 npm run dev
