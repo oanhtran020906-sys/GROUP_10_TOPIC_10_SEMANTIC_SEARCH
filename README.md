@@ -19,19 +19,19 @@ Hệ thống tìm kiếm sản phẩm thông minh dành cho Laptop và Phụ ki�
 
 ## 🚀 Hướng dẫn cài đặt & Kết nối
 
-### 2. Khởi tạo môi trường Backend
-
+### 1. Khởi tạo môi trường Backend
 
 Di chuyển vào thư mục backend và tạo môi trường ảo:
 ```bash
 cd backend
 ```
 
-Điều chỉnh file .evn
-Copy file: Chạy lệnh 
+Điều chỉnh file .env. Copy file: Chạy lệnh 
 ```bash
 cp .env.example .env
 ```
+Sau khi copy xong, điều chỉnh tham số cho phù hợp với máy
+
 Tạo môi trường python ảo
 ```bash
 python -m venv venv
@@ -51,16 +51,16 @@ source venv/bin/activate
 conda activate searchenv
 ```
 
-
-# Cài đặt thư viện
+Cài đặt thư viện
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Triển khai Database (Docker)
+### 2. Triển khai Database
 Nếu bạn đã cài Docker, chỉ cần một câu lệnh duy nhất để dựng Postgres và Qdrant:
 
 ```bash
+# hiện tại chưa có cái này, nhg sau sẽ viết
 docker-compose up -d
 ```
 
