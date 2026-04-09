@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechnaLG Zenith</title>
+
+    <!-- LINK CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="sidebar" id="sidebar">
+    <h3>Danh mục</h3>
+    <ul class="category-list">
+        <li onclick="filterBy('laptop')">Laptop</li>
+        <li onclick="filterBy('màn hình')">Màn hình</li>
+        <li onclick="filterBy('điện thoại')">Điện thoại</li>
+        <li onclick="filterBy('máy tính bảng')">Máy tính bảng</li>
+        <li onclick="filterBy('bàn phím')">Bàn phím</li>
+        <li onclick="filterBy('chuột')">Chuột</li>
+        <li onclick="filterBy('loa')">Loa</li>
+        <li onclick="filterBy('tai nghe')">Tai nghe</li>
+        <li onclick="filterBy('camera')">Camera</li>
+    </ul>
+</div>
+
+<header>
+    <div class="menu-btn" onclick="toggleMenu()">☰ MENU</div>
+
+    <div class="search-options">
+        <div class="option" id="sql-opt" onclick="setMode('sql')">SQL</div>
+        <div class="option active" id="vec-opt" onclick="setMode('vec')">VECTOR</div>
+    </div>
+</header>
+
+<div class="hero-section">
+    <div class="brand-logo-big" onclick="location.reload()" style="cursor:pointer">
+        <span class="brand-techna">Techna</span><span class="brand-lg">LG</span>
+    </div>
+
+    <p style="letter-spacing: 8px; opacity: 0.5; margin-top: 10px;">
+        MAGIC • TECHNOLOGY • ZENITH
+    </p>
+
+    <div class="big-search-wrapper">
+        <input type="text" class="big-search-bar" id="search-input" placeholder="Tìm kiếm...">
+    </div>
+
+    <div style="margin-top: 60px; cursor: pointer; opacity: 0.6;"
+         onclick="document.getElementById('product-section').scrollIntoView()">
+        ▼ CUỘN ĐỂ XEM SẢN PHẨM ▼
+    </div>
+</div>
+
+<main class="main-content" id="product-section">
+    <h2 class="section-title">
+        Sản phẩm <span id="cat-name">Nổi bật</span>
+    </h2>
+
+    <div class="products-grid" id="product-display"></div>
+</main>
+
+<!-- LINK JS -->
+<script src="scripts.js"></script>
+
+</body>
+</html>
