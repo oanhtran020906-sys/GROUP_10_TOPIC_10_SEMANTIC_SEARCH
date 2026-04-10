@@ -1,63 +1,106 @@
+"""
+Embedding Service sử dụng Sentence-Transformers 2.5.1
+CHẠY LOCAL - MIỄN PHÍ - KHÔNG CẦN API KEY
+"""
+
+from sentence_transformers import SentenceTransformer
+import numpy as np
+from typing import List, Union
+import logging
 import sys
 import os
-import openai
-from typing import List
-import logging
 
-# Thêm dòng này để import config từ thư mục cha
+# Thêm đường dẫn để import config
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from config import settings
+from config import config
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class TextEmbeddingService:
-    """Service for generating text embeddings using OpenAI API"""
+class EmbeddingService:
+    """
+    Service để tạo embeddings từ text sử dụng Sentence-Transformers
+    Model mặc định: all-MiniLM-L6-v2 (384 dimensions, nhanh, nhẹ)
+    """
+    
+    _instance = None
+    
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
     
     def __init__(self):
-        openai.api_key = settings.OPENAI_API_KEY
-        self.model_name = settings.TEXT_EMBEDDING_MODEL
-        self.dimension = settings.TEXT_EMBEDDING_DIMENSION
-        logger.info(f"✅ Using OpenAI model: {self.model_name} (dimension: {self.dimension})")
-    
-    def get_embedding(self, text: str) -> List[float]:
-        """Generate embedding for a single text"""
-        if not text or not text.strip():
-            return [0.0] * self.dimension
+        if self._initialized:
+            return
         
+        self.model_name = config.EMBEDDING_MODEL
+        self.model = None
+        self.vector_size = config.VECTOR_SIZE
+        
+        self._load_model()
+        self._initialized = True
+    
+    def _load_model(self):
+        """Tải Sentence-Transformers model"""
         try:
-            response = openai.embeddings.create(
-                model=self.model_name,
-                input=text[:8000],
-                encoding_format="float"
-            )
-            return response.data[0].embedding
+            logger.info(f"📥 Loading Sentence-Transformers model: {self.model_name}")
+            self.model = SentenceTransformer(self.model_name)
+            self.vector_size = self.model.get_sentence_embedding_dimension()
+            logger.info(f"✅ Model loaded successfully!")
+            logger.info(f"   📐 Vector dimension: {self.vector_size}")
+            logger.info(f"   💰 Cost: FREE (runs locally)")
         except Exception as e:
-            logger.error(f"Failed to generate embedding: {e}")
-            return [0.0] * self.dimension
+            logger.error(f"❌ Failed to load model: {e}")
+            raise
     
-    def get_product_embedding(self, product: dict) -> List[float]:
-        """Generate embedding for a product"""
-        text_parts = []
+    def encode(self, texts: Union[str, List[str]], normalize: bool = True) -> np.ndarray:
+        """
+        Chuyển đổi text thành vector embedding
         
-        if product.get('name'):
-            text_parts.append(f"Sản phẩm: {product['name']}")
+        Args:
+            texts: Một hoặc nhiều chuỗi text
+            normalize: Chuẩn hóa vector (cho cosine similarity)
         
-        if product.get('brand') and product['brand'] != 'Unknown':
-            text_parts.append(f"Thương hiệu: {product['brand']}")
+        Returns:
+            Numpy array của embeddings
+        """
+        if isinstance(texts, str):
+            texts = [texts]
         
-        if product.get('category'):
-            text_parts.append(f"Danh mục: {product['category']}")
+        embeddings = self.model.encode(
+            texts,
+            normalize_embeddings=normalize,
+            show_progress_bar=False
+        )
         
-        if product.get('description'):
-            desc = product['description'][:500]
-            text_parts.append(f"Mô tả: {desc}")
-        
-        combined_text = " | ".join(text_parts)
-        return self.get_embedding(combined_text)
+        return embeddings
+    
+    def get_embedding(self, text: str) -> np.ndarray:
+        """Lấy embedding cho một text"""
+        return self.encode(text)[0]
+    
+    def get_embeddings_batch(self, texts: List[str]) -> np.ndarray:
+        """Lấy embeddings cho nhiều text cùng lúc"""
+        return self.encode(texts)
+    
+    def get_vector_size(self) -> int:
+        """Trả về kích thước vector"""
+        return self.vector_size
+    
+    def get_model_info(self) -> dict:
+        """Trả về thông tin model"""
+        return {
+            'model_name': self.model_name,
+            'vector_size': self.vector_size,
+            'framework': 'Sentence-Transformers',
+            'version': '2.5.1',
+            'cost': 'FREE',
+            'local': True
+        }
 
 
 # Singleton instance
-embedding_service = TextEmbeddingService()
+embedding_service = EmbeddingService()
