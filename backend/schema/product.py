@@ -10,7 +10,8 @@ class ProductResponse(BaseModel):
     image_path: Optional[str]
     description: Optional[str]
     category_id: int
-    budget_id: int
+    budget_id: Optional[int] = None 
+    search_type: Optional[str] = "sql"
 
     class Config:
         from_attributes = True

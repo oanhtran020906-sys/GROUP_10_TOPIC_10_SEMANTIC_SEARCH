@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Query
 from typing import List, Optional
-from services.search_services import search_products_sql, get_all_categories
+from services.search_services import search_service, get_all_categories # Import instance mới
 from schema.product import ProductResponse
 from fastapi.staticfiles import StaticFiles
 import os
@@ -26,18 +26,20 @@ async def sql_search(
     min_price: Optional[float] = None,
     max_price: Optional[float] = None
 ):
-    """
-    Tìm kiếm sản phẩm bằng SQL truyền thống (Sử dụng ILIKE)
-    """
-    results = search_products_sql(
+    # Gọi thông qua search_service
+    results = search_service.traditional_search(
         query=q, 
         category_id=category_id, 
         min_price=min_price, 
         max_price=max_price
     )
-
     print(f"🔍 [SQL Search] Keyword: '{q}' | Found: {len(results)} products")
+    return results
 
+@app.get("/search/vector", response_model=List[ProductResponse])
+async def vector_search(q: str = Query(..., description="Tìm kiếm ý nghĩa")):
+    """Endpoint mới cho chế độ VECTOR (màu tím)"""
+    results = search_service.semantic_search(query=q)
     return results
 
 @app.get("/categories")
