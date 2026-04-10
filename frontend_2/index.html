@@ -12,7 +12,7 @@
 <body>
 
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
+<div class="stars"></div>
 <div class="sidebar" id="sidebar">
     <h2>Danh mục</h2>
     <ul class="category-list">
@@ -42,12 +42,15 @@
         <span class="brand-techna">Techna</span><span class="brand-lg">LG</span>
     </div>
 
-    <p style="letter-spacing: 8px; opacity: 0.5; margin-top: 10px;">
-        Empowering Digital Change
+    <p class="hero-subtitle">
+    Empowering Digital Change
     </p>
 
     <div class="big-search-wrapper">
         <input type="text" class="big-search-bar" id="search-input" placeholder="Tìm kiếm...">
+        <img src="loupe.png"
+            class="search-icon"
+            onclick="handleSearch()" />
     </div>
 
     <div style="margin-top: 60px; cursor: pointer; opacity: 0.6;"
@@ -58,11 +61,12 @@
 
 <main class="main-content" id="product-section">
     <h2 class="section-title">
-        Sản phẩm <span id="cat-name">Nổi bật</span>
+        SẢN PHẨM <span id="cat-name">NỔI BẬT</span>
     </h2>
-
+    <img src="images/product.jpg" class="product-img">
     <div class="products-grid" id="product-display"></div>
 </main>
+
 
 <!-- LINK JS -->
 <script src="scripts.js"></script>

@@ -39,9 +39,21 @@ header {
 /* SEARCH MODE */
 .search-options {
     display: flex;
-    gap: 10px;
-    
-    
+    gap: 10px;      
+}
+.search-icon {
+    position: absolute;
+    right: 30px;      
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.search-icon:hover {
+    opacity: 1;
 }
 
 /* Trạng thái mặc định (khi chưa ấn) */
@@ -131,39 +143,76 @@ header {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+    gap:20px;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(255, 0, 106, 0.4), transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(38, 255, 208, 0.756), transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(0, 100, 255, 0.4), transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(150, 0, 255, 0.3), transparent 50%),
+        #000;
     text-align: center;
+    
 }
 
 /* LOGO */
 .brand-logo-big {
     font-size: 150px;
     font-weight: bold;
+    z-index: 10;
+    cursor: pointer;
+
 }
 
 .brand-techna {
     color: #feaaff;
+    text-shadow:
+        0 0 5px #feaaff,
+        0 0 10px #feaaff,
+        0 0 20px #feaaff;
     
 }
 
 .brand-lg {
     color: #00ffe5;
+    text-shadow: 
+        0 0 5px #00ffe5,
+        0 0 10px #00ffe5,
+        0 0 20px #00ffe5;
     
 }
-
+.hero-subtitle {
+    letter-spacing: 8px;
+    opacity: 0.7;
+    margin-top: -40px;
+    margin-bottom: 30px;
+    text-align: center; 
+    text-shadow: 
+        0 0 5px #ffffff,
+        0 0 10px #ffffff,
+        0 0 20px #ffffff;
+}
 /* SEARCH BAR */
 .big-search-wrapper {
-    margin-top: 30px;
+    position: relative;  
+    display: inline-block;
 }
 
 .big-search-bar {
-    width: 600px;
-    padding: 20px;
-    border-radius: 30px;
-    border: none;
+    width: 700px;              
+    padding: 20px 60px 20px 25px; 
+    border-radius: 40px;       
+    font-size: 20px;
+    border: 2px solid #ccc;
     outline: none;
-    font-size: 16px;
+    transition: all 0.3s ease;        
+}
+.big-search-bar:focus {
+    border-color: #ffffff;
+
+    box-shadow:
+        0 0 8px #ffffff,
+        0 0 20px #ffffff,
+        0 0 40px rgba(255, 255, 255, 0.6);
 }
 
 /* ===== MAIN CONTENT ===== */
@@ -175,7 +224,10 @@ header {
 
 /* TITLE */
 .section-title {
-    margin-bottom: 20px;
+    margin-bottom: 50px;
+    margin-top: -20px;
+    font-size:40px;
+    font-weight: bold;
 }
 
 /* GRID */
@@ -200,11 +252,19 @@ header {
     padding: 15px;
     border-radius: 12px;
     transition: 0.3s;
+    position:relative;
+    z-index:2;
+    transition:all 0.3s ease;
 }
 
 .product-card:hover {
     transform: translateY(-5px);
+    box-shadow:
+        0 0 10px rgba(255, 255, 255, 0.6),
+        0 0 20px rgba(255, 255, 255, 0.5),
+        0 0 40px rgba(255, 255, 255, 0.4);
 }
+
 
 /* IMAGE */
 .product-card img {
@@ -233,5 +293,46 @@ header {
         font-size: 40px;
     }
 }
+
+.stars {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    background: transparent;
+    overflow: hidden;
+    z-index: 0;
+}
+
+/* tạo nhiều sao bằng box-shadow */
+.stars::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+
+    box-shadow:
+        100px 200px white,
+        300px 400px white,
+        500px 100px white,
+        700px 300px white,
+        900px 600px white,
+        1200px 200px white,
+        1500px 500px white;
+
+    animation: moveStars 20s linear infinite;
+}
+
+@keyframes moveStars {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-1000px);
+    }
+}   
 
 
