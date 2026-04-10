@@ -2,19 +2,19 @@
 Tech Store Semantic Search - Main Application
 FastAPI backend with Qdrant vector database
 """
+
 import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 import warnings
-warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore")
 
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
-import os
+from fastapi.responses import JSONResponse
 import logging
-from typing import Optional, List, Dict, Any
+from typing import List, Dict, Any
+import pandas as pd
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -26,7 +26,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS middleware
+# CORS middleware - Cho phép frontend React kết nối
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -39,16 +39,17 @@ app.add_middleware(
 # KHỞI TẠO SEMANTIC SEARCH SERVICE
 # ============================================
 
-# Global variables
-search_service = None
 model = None
 client = None
 collection_name = "tech_products"
 
+# Lấy đường dẫn gốc
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 def init_search_service():
     """Khởi tạo semantic search service"""
-    global search_service, model, client
+    global model, client
     
     try:
         from sentence_transformers import SentenceTransformer
@@ -61,8 +62,8 @@ def init_search_service():
         
         # Connect to Qdrant
         logger.info("🔌 Connecting to Qdrant...")
-        client = QdrantClient(host="localhost", port=6333)
-        client.get_collections()  # Test connection
+        client = QdrantClient(host="localhost", port=6333, check_compatibility=False)
+        client.get_collections()
         logger.info("✅ Connected to Qdrant Server")
         
         return True
@@ -119,6 +120,22 @@ def semantic_search(query: str, limit: int = 10) -> List[Dict[str, Any]]:
         return []
 
 
+def get_csv_path():
+    """Tìm đường dẫn đến file CSV"""
+    possible_paths = [
+        os.path.join(BASE_DIR, "backend", "data", "raw", "products.csv"),
+        os.path.join(BASE_DIR, "data", "raw", "products.csv"),
+        os.path.join(os.path.dirname(__file__), "data", "raw", "products.csv"),
+        "data/raw/products.csv"
+    ]
+    
+    for path in possible_paths:
+        if os.path.exists(path):
+            return path
+    
+    return None
+
+
 # ============================================
 # API ENDPOINTS
 # ============================================
@@ -133,223 +150,26 @@ async def startup_event():
     success = init_search_service()
     
     if success:
-        print(f"✅ Semantic search service ready!")
-        print(f"📁 Collection: {collection_name}")
-        print(f"\n🌐 API endpoints:")
-        print(f"   GET  /              - Web UI")
-        print(f"   GET  /health        - Health check")
-        print(f"   GET  /api/search    - Semantic search")
-        print(f"   GET  /api/sql-search - SQL LIKE search")
-        print(f"   GET  /api/compare   - Compare both")
+        try:
+            info = client.get_collection(collection_name)
+            print(f"✅ Semantic search service ready!")
+            print(f"📁 Collection: {collection_name}")
+            print(f"📊 Products indexed: {info.points_count}")
+        except:
+            print(f"✅ Semantic search service ready!")
+            print(f"📁 Collection: {collection_name}")
+        
+        print(f"\n🌐 API Endpoints:")
+        print(f"   GET  http://localhost:8000/health")
+        print(f"   GET  http://localhost:8000/api/search?q=...")
+        print(f"   GET  http://localhost:8000/api/sql-search?q=...")
+        print(f"   GET  http://localhost:8000/api/compare?q=...")
+        print(f"   GET  http://localhost:8000/api/products")
     else:
         print("❌ Failed to initialize semantic search service")
         print("   Make sure Qdrant server is running: qdrant.exe")
     
     print("=" * 50)
-
-
-@app.get("/")
-async def root():
-    """Web UI cho semantic search"""
-    return HTMLResponse("""
-    <!DOCTYPE html>
-    <html lang="vi">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>🔍 Tech Store - Semantic Search</title>
-        <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body {
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                min-height: 100vh;
-                padding: 20px;
-            }
-            .container { max-width: 1400px; margin: 0 auto; }
-            h1 { text-align: center; color: white; margin-bottom: 10px; font-size: 2.5rem; }
-            .subtitle { text-align: center; color: rgba(255,255,255,0.9); margin-bottom: 30px; }
-            .search-box {
-                background: white;
-                border-radius: 60px;
-                padding: 5px;
-                display: flex;
-                margin-bottom: 30px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            }
-            .search-box input {
-                flex: 1;
-                padding: 18px 25px;
-                font-size: 16px;
-                border: none;
-                background: transparent;
-                outline: none;
-            }
-            .search-box button {
-                padding: 15px 40px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                border: none;
-                border-radius: 50px;
-                cursor: pointer;
-                font-size: 16px;
-                font-weight: 600;
-            }
-            .comparison {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 20px;
-            }
-            .column {
-                background: white;
-                border-radius: 20px;
-                padding: 20px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            }
-            .column h2 {
-                margin-bottom: 15px;
-                padding-bottom: 10px;
-                border-bottom: 2px solid #667eea;
-            }
-            .product-card {
-                border: 1px solid #e0e0e0;
-                border-radius: 12px;
-                padding: 15px;
-                margin-bottom: 10px;
-                transition: all 0.2s;
-            }
-            .product-card:hover {
-                border-color: #667eea;
-                box-shadow: 0 4px 12px rgba(102,126,234,0.15);
-            }
-            .product-name { font-weight: 600; font-size: 16px; color: #333; }
-            .product-brand { color: #666; font-size: 13px; margin: 5px 0; }
-            .product-price { color: #ff6b6b; font-weight: bold; }
-            .similarity {
-                display: inline-block;
-                background: #4caf50;
-                color: white;
-                padding: 2px 10px;
-                border-radius: 20px;
-                font-size: 11px;
-                margin-top: 8px;
-            }
-            .loading { text-align: center; padding: 40px; color: #999; }
-            .example-queries {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                justify-content: center;
-                margin-bottom: 30px;
-            }
-            .example-chip {
-                background: rgba(255,255,255,0.2);
-                color: white;
-                padding: 8px 16px;
-                border-radius: 20px;
-                font-size: 13px;
-                cursor: pointer;
-            }
-            @media (max-width: 768px) {
-                .comparison { grid-template-columns: 1fr; }
-                h1 { font-size: 1.8rem; }
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>🔍 Tech Store - Semantic Search</h1>
-            <p class="subtitle">Tìm kiếm bằng ngữ nghĩa - Hiểu đúng ý bạn, không cần từ khóa chính xác</p>
-            
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Ví dụ: tôi muốn mua điện thoại chụp ảnh đẹp giá dưới 15 triệu">
-                <button onclick="search()">🔍 Tìm kiếm</button>
-            </div>
-            
-            <div class="example-queries" id="exampleQueries"></div>
-            
-            <div class="comparison">
-                <div class="column">
-                    <h2>🎯 Vector Search (Ngữ nghĩa)</h2>
-                    <div id="semanticResults">💡 Nhập nội dung tìm kiếm ở trên</div>
-                </div>
-                <div class="column">
-                    <h2>📝 SQL LIKE Search (Từ khóa)</h2>
-                    <div id="sqlResults">💡 Nhập nội dung tìm kiếm ở trên</div>
-                </div>
-            </div>
-        </div>
-        
-        <script>
-            const examples = [
-                "tôi muốn mua điện thoại chụp ảnh đẹp",
-                "camera an ninh ngoài trời chống nước",
-                "laptop gaming cấu hình mạnh",
-                "tai nghe bluetooth không dây"
-            ];
-            
-            const container = document.getElementById('exampleQueries');
-            examples.forEach(query => {
-                const chip = document.createElement('div');
-                chip.className = 'example-chip';
-                chip.textContent = query;
-                chip.onclick = () => {
-                    document.getElementById('searchInput').value = query;
-                    search();
-                };
-                container.appendChild(chip);
-            });
-            
-            async function search() {
-                const query = document.getElementById('searchInput').value;
-                if (!query.trim()) return;
-                
-                document.getElementById('semanticResults').innerHTML = '<div class="loading">⏳ Đang tìm kiếm...</div>';
-                document.getElementById('sqlResults').innerHTML = '<div class="loading">⏳ Đang tìm kiếm...</div>';
-                
-                try {
-                    const response = await fetch(`/api/compare?q=${encodeURIComponent(query)}&limit=8`);
-                    const data = await response.json();
-                    
-                    // Semantic results
-                    if (data.semantic && data.semantic.length > 0) {
-                        document.getElementById('semanticResults').innerHTML = data.semantic.map(r => `
-                            <div class="product-card">
-                                <div class="product-name">${r.name}</div>
-                                <div class="product-brand">🏷️ ${r.brand || 'Thương hiệu nổi bật'}</div>
-                                <div class="product-price">💰 ${r.price.toLocaleString()}đ</div>
-                                <div class="similarity">🎯 Độ tương đồng: ${r.similarity_score}%</div>
-                            </div>
-                        `).join('');
-                    } else {
-                        document.getElementById('semanticResults').innerHTML = '<div class="loading">❌ Không tìm thấy kết quả</div>';
-                    }
-                    
-                    // SQL results
-                    if (data.sql && data.sql.length > 0) {
-                        document.getElementById('sqlResults').innerHTML = data.sql.map(r => `
-                            <div class="product-card">
-                                <div class="product-name">${r.name}</div>
-                                <div class="product-brand">🏷️ ${r.brand || 'Thương hiệu nổi bật'}</div>
-                                <div class="product-price">💰 ${r.price.toLocaleString()}đ</div>
-                            </div>
-                        `).join('');
-                    } else {
-                        document.getElementById('sqlResults').innerHTML = '<div class="loading">❌ SQL không tìm thấy (vì từ khóa không khớp chính xác)</div>';
-                    }
-                } catch (error) {
-                    document.getElementById('semanticResults').innerHTML = '<div class="loading">⚠️ Lỗi kết nối</div>';
-                    document.getElementById('sqlResults').innerHTML = '<div class="loading">⚠️ Lỗi kết nối</div>';
-                }
-            }
-            
-            document.getElementById('searchInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') search();
-            });
-        </script>
-    </body>
-    </html>
-    """)
 
 
 @app.get("/health")
@@ -358,7 +178,11 @@ async def health_check():
     global model, client, collection_name
     
     if model is None or client is None:
-        return {"status": "error", "message": "Semantic search service not initialized"}
+        return {
+            "status": "error", 
+            "message": "Semantic search service not initialized",
+            "service": "semantic-search"
+        }
     
     try:
         info = client.get_collection(collection_name)
@@ -367,18 +191,25 @@ async def health_check():
             "service": "semantic-search",
             "collection": collection_name,
             "indexed_products": info.points_count,
-            "embedding_model": "all-MiniLM-L6-v2"
+            "embedding_model": "all-MiniLM-L6-v2",
+            "vector_size": 384
         }
     except Exception as e:
-        return {"status": "degraded", "message": str(e)}
+        return {
+            "status": "degraded", 
+            "message": str(e),
+            "service": "semantic-search"
+        }
 
 
 @app.get("/api/search")
-async def search_semantic(
-    q: str = Query(..., description="Search query"),
-    limit: int = Query(10, ge=1, le=50)
+async def api_semantic_search(
+    q: str = Query(..., description="Search query", min_length=1),
+    limit: int = Query(10, ge=1, le=50, description="Number of results")
 ):
-    """Semantic search endpoint"""
+    """
+    Semantic search endpoint using vector similarity
+    """
     results = semantic_search(q, limit)
     return {
         "query": q,
@@ -389,15 +220,26 @@ async def search_semantic(
 
 
 @app.get("/api/sql-search")
-async def search_sql(
-    q: str = Query(..., description="Search query"),
-    limit: int = Query(10, ge=1, le=50)
+async def api_sql_search(
+    q: str = Query(..., description="Search query", min_length=1),
+    limit: int = Query(10, ge=1, le=50, description="Number of results")
 ):
-    """SQL LIKE search for comparison"""
-    import pandas as pd
-    
+    """
+    Traditional SQL LIKE search for comparison
+    """
     try:
-        df = pd.read_csv("data/raw/products.csv", encoding='utf-8')
+        csv_path = get_csv_path()
+        
+        if csv_path is None:
+            return {
+                "query": q,
+                "results": [],
+                "total": 0,
+                "type": "sql",
+                "error": "CSV file not found"
+            }
+        
+        df = pd.read_csv(csv_path, encoding='utf-8')
         df = df.fillna('')
         
         query_lower = q.lower()
@@ -421,41 +263,207 @@ async def search_sql(
             "type": "sql"
         }
     except Exception as e:
-        return {"query": q, "results": [], "total": 0, "error": str(e)}
+        return {
+            "query": q,
+            "results": [],
+            "total": 0,
+            "type": "sql",
+            "error": str(e)
+        }
 
 
 @app.get("/api/compare")
-async def compare_search(
-    q: str = Query(..., description="Search query"),
-    limit: int = Query(10, ge=1, le=50)
+async def api_compare_search(
+    q: str = Query(..., description="Search query", min_length=1),
+    limit: int = Query(10, ge=1, le=50, description="Number of results")
 ):
-    """Compare semantic search vs SQL search"""
+    """
+    Compare semantic search vs SQL search side by side
+    """
+    # Semantic search results
     semantic_results = semantic_search(q, limit)
     
-    import pandas as pd
-    df = pd.read_csv("data/raw/products.csv", encoding='utf-8')
-    df = df.fillna('')
-    
-    query_lower = q.lower()
-    sql_results = []
-    
-    for idx, row in df.iterrows():
-        search_text = f"{row['name']} {row['brand']} {row['description']}".lower()
-        if query_lower in search_text:
-            sql_results.append({
-                "id": idx,
+    # SQL search results
+    try:
+        csv_path = get_csv_path()
+        
+        if csv_path is None:
+            return {
+                "query": q,
+                "semantic": semantic_results,
+                "sql": [],
+                "semantic_count": len(semantic_results),
+                "sql_count": 0,
+                "error": "CSV file not found"
+            }
+        
+        df = pd.read_csv(csv_path, encoding='utf-8')
+        df = df.fillna('')
+        
+        query_lower = q.lower()
+        sql_results = []
+        
+        for idx, row in df.iterrows():
+            search_text = f"{row['name']} {row['brand']} {row['description']}".lower()
+            if query_lower in search_text:
+                sql_results.append({
+                    "id": idx,
+                    "name": row['name'],
+                    "brand": row['brand'] if row['brand'] else '',
+                    "price": int(row['price'])
+                })
+        
+        return {
+            "query": q,
+            "semantic": semantic_results,
+            "sql": sql_results[:limit],
+            "semantic_count": len(semantic_results),
+            "sql_count": len(sql_results[:limit])
+        }
+    except Exception as e:
+        return {
+            "query": q,
+            "semantic": semantic_results,
+            "sql": [],
+            "semantic_count": len(semantic_results),
+            "sql_count": 0,
+            "error": str(e)
+        }
+
+
+@app.get("/api/products")
+async def api_get_products(
+    limit: int = Query(50, ge=1, le=200, description="Number of products"),
+    skip: int = Query(0, ge=0, description="Skip count"),
+    category_id: int = Query(None, description="Filter by category")
+):
+    """
+    Get all products with pagination and filtering
+    """
+    try:
+        csv_path = get_csv_path()
+        
+        if csv_path is None:
+            return {
+                "products": [],
+                "total": 0,
+                "skip": skip,
+                "limit": limit,
+                "error": "CSV file not found"
+            }
+        
+        df = pd.read_csv(csv_path, encoding='utf-8')
+        df = df.fillna('')
+        
+        # Filter by category if provided
+        if category_id:
+            df = df[df['category_id'] == category_id]
+        
+        total = len(df)
+        df = df.iloc[skip:skip+limit]
+        
+        products = []
+        for idx, row in df.iterrows():
+            products.append({
+                "id": int(idx),
                 "name": row['name'],
                 "brand": row['brand'] if row['brand'] else '',
-                "price": int(row['price'])
+                "price": int(row['price']),
+                "category_id": int(row['category_id']),
+                "budget_id": int(row['budget_id']),
+                "image_path": row['image_path'],
+                "description": row['description'][:200] + "..." if len(row['description']) > 200 else row['description']
             })
-    
-    return {
-        "query": q,
-        "semantic": semantic_results,
-        "sql": sql_results[:limit],
-        "semantic_count": len(semantic_results),
-        "sql_count": len(sql_results[:limit])
+        
+        return {
+            "products": products,
+            "total": total,
+            "skip": skip,
+            "limit": limit
+        }
+    except Exception as e:
+        return {
+            "products": [],
+            "total": 0,
+            "skip": skip,
+            "limit": limit,
+            "error": str(e)
+        }
+
+
+@app.get("/api/categories")
+async def api_get_categories():
+    """
+    Get all categories with product counts
+    """
+    try:
+        csv_path = get_csv_path()
+        
+        if csv_path is None:
+            return {"categories": []}
+        
+        df = pd.read_csv(csv_path, encoding='utf-8')
+        
+        categories = {
+            1: "Camera an ninh",
+            2: "Điện thoại",
+            3: "Đồng hồ thông minh",
+            4: "Máy tính bảng",
+            5: "Bàn phím",
+            6: "Màn hình",
+            7: "Tai nghe",
+            8: "Laptop",
+            9: "Chuột",
+            10: "Loa"
+        }
+        
+        result = []
+        for cat_id, cat_name in categories.items():
+            count = len(df[df['category_id'] == cat_id])
+            if count > 0:
+                result.append({
+                    "id": cat_id,
+                    "name": cat_name,
+                    "product_count": int(count)
+                })
+        
+        return {"categories": result}
+    except Exception as e:
+        return {"categories": [], "error": str(e)}
+
+
+@app.get("/api/stats")
+async def api_get_stats():
+    """
+    Get system statistics
+    """
+    stats = {
+        "service": "semantic-search",
+        "embedding_model": "all-MiniLM-L6-v2",
+        "vector_size": 384,
+        "collection_name": collection_name
     }
+    
+    # Get Qdrant stats
+    if client is not None:
+        try:
+            info = client.get_collection(collection_name)
+            stats["indexed_products"] = info.points_count
+        except:
+            stats["indexed_products"] = 0
+    else:
+        stats["indexed_products"] = 0
+    
+    # Get CSV stats
+    try:
+        csv_path = get_csv_path()
+        if csv_path:
+            df = pd.read_csv(csv_path, encoding='utf-8')
+            stats["total_products_in_csv"] = len(df)
+    except:
+        stats["total_products_in_csv"] = 0
+    
+    return stats
 
 
 if __name__ == "__main__":
