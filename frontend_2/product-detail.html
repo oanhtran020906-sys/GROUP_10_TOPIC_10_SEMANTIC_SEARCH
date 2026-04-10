@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechnaLG - Chi tiết sản phẩm</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* CSS riêng cho trang chi tiết để tối ưu hiển thị */
+        .detail-wrapper {
+            padding: 120px 5% 60px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .detail-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 255, 170, 0.2);
+            border-radius: 30px;
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .detail-visual {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .visual-placeholder {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: linear-gradient(45deg, #1a1f35, #0a0e1b);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--magic-green);
+            border: 1px dashed var(--magic-green);
+            text-transform: uppercase;
+        }
+
+        .detail-info {
+            flex: 1;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-brand {
+            color: var(--brand-techna);
+            font-weight: bold;
+            letter-spacing: 3px;
+            font-size: 14px;
+        }
+
+        .info-title {
+            font-size: 48px;
+            line-height: 1.1;
+            color: #fff;
+        }
+
+        .info-price {
+            font-size: 36px;
+            color: var(--magic-green);
+            font-weight: 800;
+            margin: 10px 0;
+        }
+
+        .info-desc {
+            color: #aaa;
+            line-height: 1.8;
+            font-size: 17px;
+            margin-bottom: 20px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 15px;
+            margin-top: auto;
+        }
+
+        .btn-buy {
+            flex: 2;
+            background: var(--magic-green);
+            color: #000;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-buy:hover { box-shadow: 0 0 30px var(--magic-glow); transform: scale(1.02); }
+
+        @media (max-width: 900px) {
+            .detail-card { flex-direction: column; }
+            .detail-info { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="menu-btn" style="text-decoration: none;">← QUAY LẠI</a>
+    </header>
+
+    <div class="detail-wrapper">
+        <div class="detail-card" id="detail-content">
+            <p style="padding: 50px;">Đang tải dữ liệu sản phẩm...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Logic xử lý riêng cho trang chi tiết
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const p = allProducts.find(item => item.id == id);
+
+            if (p) {
+                document.getElementById('detail-content').innerHTML = `
+                    <div class="detail-visual">
+                        <div class="visual-placeholder">TechnaLG ${p.cat}</div>
+                    </div>
+                    <div class="detail-info">
+                        <p class="info-brand">HÃNG: ${p.brand}</p>
+                        <h1 class="info-title">${p.name}</h1>
+                        <p class="info-price">${p.price}</p>
+                        <div class="info-desc">${p.desc}</div>
+                        <div class="action-btns">
+                            <button class="btn-buy">MUA NGAY</button>
+                            <button class="menu-btn" style="flex:1">GIỎ HÀNG</button>
+                        </div>
+                    </div>
+                `;
+                // Đổi title của trình duyệt theo tên sản phẩm
+                document.title = p.name + " - TechnaLG Zenith";
+            } else {
+                document.getElementById('detail-content').innerHTML = `
+                    <div style="padding: 100px; text-align: center; width: 100%;">
+                        <h2>Rất tiếc, không tìm thấy sản phẩm!</h2>
+                        <a href="index.html" style="color: var(--magic-green);">Quay lại trang chủ</a>
+                    </div>
+                `;
+            }
+        };
+    </script>
+</body>
+</html>
