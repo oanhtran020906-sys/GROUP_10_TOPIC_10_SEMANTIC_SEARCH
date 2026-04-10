@@ -1,174 +1,160 @@
-#!/usr/bin/env python
+"""
+Insert sản phẩm vào Qdrant SERVER (có UI)
+QUAN TRỌNG: Phải kết nối đến server đang chạy, không phải local mode
+"""
+
 import sys
 import os
-import pandas as pd
-import time
-from typing import List, Dict
-from qdrant_client.models import PointStruct
 
-# Thêm đường dẫn để import từ thư mục cha
+# Thêm đường dẫn
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from database.qdrant import init_qdrant, get_qdrant_manager
-from services.embedding_service import embedding_service
-from config import settings
-import logging
+import pandas as pd
+import numpy as np
+import time
+from qdrant_client import QdrantClient
+from qdrant_client.models import VectorParams, Distance, PointStruct
+from sentence_transformers import SentenceTransformer
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+print("=" * 60)
+print("📦 INSERTING PRODUCTS TO QDRANT SERVER")
+print("=" * 60)
 
+# ============================================
+# 1. KẾT NỐI ĐẾN QDRANT SERVER (QUAN TRỌNG)
+# ============================================
+# Phải dùng host và port, không dùng path
+try:
+    client = QdrantClient(host="localhost", port=6333)
+    # Kiểm tra kết nối
+    client.get_collections()
+    print("✅ Connected to Qdrant Server at localhost:6333")
+    print("   🌐 UI: http://localhost:6333/dashboard")
+except Exception as e:
+    print(f"❌ Cannot connect to Qdrant Server: {e}")
+    print("\n💡 Please start Qdrant server first:")
+    print("   cd D:\\qdrant && qdrant.exe")
+    sys.exit(1)
 
-def load_products_from_csv(csv_path: str) -> List[Dict]:
-    """Load products from CSV file"""
-    try:
-        df = pd.read_csv(csv_path)
-        df.columns = df.columns.str.replace('\ufeff', '')
-        products = []
-        
-        category_map = {
-            1: "Camera", 2: "Điện thoại", 3: "Smartwatch", 4: "Tablet",
-            5: "Bàn phím", 6: "Màn hình", 7: "Tai nghe", 8: "Laptop",
-            9: "Chuột", 10: "Loa"
-        }
-        
-        for idx, row in df.iterrows():
-            price_str = str(row.get('price', '0')).replace(',', '').strip()
-            try:
-                price = float(price_str)
-            except:
-                price = 0
-            
-            product = {
-                "id": idx + 1,
-                "name": str(row.get('name', '')),
-                "brand": str(row.get('brand', '')) if pd.notna(row.get('brand')) else "Unknown",
-                "price": price,
-                "description": str(row.get('description', '')),
-                "category_id": int(row.get('category_id', 0)) if pd.notna(row.get('category_id')) else 0,
-                "image_path": str(row.get('image_path', ''))
-            }
-            product["category"] = category_map.get(product["category_id"], "Other")
-            
-            if product['name'] and product['name'] != 'nan':
-                products.append(product)
-        
-        logger.info(f"✅ Loaded {len(products)} products from {csv_path}")
-        return products
-    except Exception as e:
-        logger.error(f"Failed to load CSV: {e}")
-        return []
+# ============================================
+# 2. CẤU HÌNH
+# ============================================
+collection_name = "tech_products"  # Tên collection muốn tạo
+csv_path = "data/raw/products.csv"  # Đường dẫn file CSV
 
+# ============================================
+# 3. LOAD MODEL
+# ============================================
+print("\n📥 Loading embedding model...")
+model = SentenceTransformer('all-MiniLM-L6-v2')
+vector_size = model.get_sentence_embedding_dimension()
+print(f"✅ Model loaded! Vector size: {vector_size}")
 
-def main():
-    logger.info("=" * 60)
-    logger.info("🚀 PRODUCT EMBEDDING & INSERTION SCRIPT")
-    logger.info("=" * 60)
-    
-    # Check API key
-    if not settings.OPENAI_API_KEY or settings.OPENAI_API_KEY == "YOUR_OPENAI_API_KEY_HERE":
-        logger.error("❌ Please set your OpenAI API key in backend/.env file")
-        logger.info("   Get your API key from: https://platform.openai.com/api-keys")
-        sys.exit(1)
-    
-    # Initialize Qdrant
-    manager = init_qdrant(
-        host=settings.QDRANT_HOST,
-        port=settings.QDRANT_PORT,
-        collection_name=settings.QDRANT_COLLECTION_NAME
+# ============================================
+# 4. ĐỌC CSV
+# ============================================
+print(f"\n📂 Reading CSV: {csv_path}")
+
+if not os.path.exists(csv_path):
+    print(f"❌ File not found: {csv_path}")
+    sys.exit(1)
+
+df = pd.read_csv(csv_path, encoding='utf-8')
+df = df.fillna('')
+print(f"✅ Loaded {len(df)} products")
+
+# ============================================
+# 5. XÓA COLLECTION CŨ NẾU CÓ
+# ============================================
+if client.collection_exists(collection_name):
+    print(f"\n🗑️ Deleting existing collection: {collection_name}")
+    client.delete_collection(collection_name)
+    print("   ✅ Deleted")
+
+# ============================================
+# 6. TẠO COLLECTION MỚI
+# ============================================
+print(f"\n📁 Creating collection: {collection_name}")
+client.create_collection(
+    collection_name=collection_name,
+    vectors_config=VectorParams(
+        size=vector_size,
+        distance=Distance.COSINE
     )
-    
-    # Delete old collection if exists
-    if manager.collection_exists():
-        logger.info("Deleting existing collection...")
-        manager.delete_collection()
-        time.sleep(1)
-    
-    # Create new collection
-    manager.create_collection(vector_size=settings.TEXT_EMBEDDING_DIMENSION)
-    
-    # Find CSV file
-    csv_paths = [
-        "products.csv",
-        "../products.csv",
-        "../../products.csv",
-        "backend/data/raw/products.csv",
-        "data/raw/products.csv"
-    ]
-    
-    products = []
-    for path in csv_paths:
-        if os.path.exists(path):
-            logger.info(f"Found CSV at: {path}")
-            products = load_products_from_csv(path)
-            if products:
-                break
-    
-    if not products:
-        logger.error("❌ No product data found!")
-        logger.info("Please place your products.csv in the backend/scripts/ folder")
-        sys.exit(1)
-    
-    # Show statistics
-    logger.info(f"\n📊 Product Statistics:")
-    logger.info(f"  Total products: {len(products)}")
-    
-    categories = {}
-    for p in products:
-        cat = p['category']
-        categories[cat] = categories.get(cat, 0) + 1
-    for cat, count in list(categories.items())[:10]:
-        logger.info(f"  - {cat}: {count} products")
-    
-    # Generate embeddings and insert
-    logger.info(f"\n🔄 Generating embeddings using OpenAI...")
-    logger.info(f"   Model: {settings.TEXT_EMBEDDING_MODEL}")
-    logger.info(f"   Dimension: {settings.TEXT_EMBEDDING_DIMENSION}")
-    
-    points = []
-    failed = []
-    
-    for i, product in enumerate(products):
-        try:
-            if (i + 1) % 20 == 0:
-                logger.info(f"  Processing [{i+1}/{len(products)}]: {product['name'][:40]}...")
-            
-            embedding = embedding_service.get_product_embedding(product)
-            
-            payload = {
-                "name": product['name'],
-                "brand": product['brand'],
-                "price": product['price'],
-                "description": product['description'][:500],
-                "category": product['category'],
-                "category_id": product['category_id'],
-                "image_path": product['image_path']
-            }
-            
-            points.append(PointStruct(id=product['id'], vector=embedding, payload=payload))
-            
-        except Exception as e:
-            logger.error(f"  Failed: {product['name']} - {e}")
-            failed.append(product['name'])
-            continue
-    
-    if points:
-        logger.info(f"\n📤 Inserting {len(points)} points into Qdrant...")
-        success = manager.upsert_points(points, batch_size=20)
-        
-        if success:
-            info = manager.get_collection_info()
-            logger.info(f"\n✅ SUCCESS!")
-            logger.info(f"   Collection: {info.get('name')}")
-            logger.info(f"   Status: {info.get('status')}")
-            logger.info(f"   Vectors inserted: {info.get('vectors_count')}")
-            
-            if failed:
-                logger.warning(f"⚠️ Failed products: {len(failed)}")
-        else:
-            logger.error("❌ Insertion failed")
-    else:
-        logger.error("❌ No points generated")
+)
+print(f"✅ Collection '{collection_name}' created!")
 
+# ============================================
+# 7. TẠO TEXT CHO EMBEDDING
+# ============================================
+print("\n🔄 Preparing texts for embedding...")
+texts = []
+for _, row in df.iterrows():
+    brand = row['brand'] if row['brand'] else ''
+    text = f"{row['name']}. {brand}. {row['description']}"
+    texts.append(text)
 
-if __name__ == "__main__":
-    main()
+# ============================================
+# 8. TẠO EMBEDDINGS
+# ============================================
+print(f"\n🔄 Generating embeddings for {len(texts)} products...")
+
+start_time = time.time()
+batch_size = 50
+all_embeddings = []
+
+for i in range(0, len(texts), batch_size):
+    batch_texts = texts[i:i+batch_size]
+    batch_embeddings = model.encode(batch_texts, normalize_embeddings=True)
+    all_embeddings.append(batch_embeddings)
+    print(f"   ✅ Processed {min(i+batch_size, len(texts))}/{len(texts)}")
+
+embeddings = np.vstack(all_embeddings)
+elapsed = time.time() - start_time
+print(f"✅ Embeddings generated in {elapsed:.2f}s")
+print(f"   Shape: {embeddings.shape}")
+
+# ============================================
+# 9. INSERT VÀO QDRANT
+# ============================================
+print(f"\n🔄 Inserting into Qdrant...")
+
+points = []
+for idx, row in df.iterrows():
+    point = PointStruct(
+        id=int(idx),
+        vector=embeddings[idx].tolist(),
+        payload={
+            'name': str(row['name']),
+            'brand': str(row['brand']) if row['brand'] else '',
+            'price': int(row['price']),
+            'category_id': int(row['category_id']),
+            'budget_id': int(row['budget_id']),
+            'image_path': str(row['image_path']),
+            'description': str(row['description'])[:500]
+        }
+    )
+    points.append(point)
+
+start_time = time.time()
+for i in range(0, len(points), batch_size):
+    batch = points[i:i+batch_size]
+    client.upsert(collection_name=collection_name, points=batch)
+    print(f"   ✅ Inserted {min(i+batch_size, len(points))}/{len(points)}")
+
+elapsed = time.time() - start_time
+
+# ============================================
+# 10. KIỂM TRA KẾT QUẢ
+# ============================================
+collection_info = client.get_collection(collection_name)
+
+print("\n" + "=" * 60)
+print("✅ INSERT COMPLETE!")
+print("=" * 60)
+print(f"📁 Collection: {collection_name}")
+print(f"📊 Products indexed: {collection_info.points_count}")
+print(f"⏱️ Time: {elapsed:.2f} seconds")
+
+print("\n🌐 REFRESH your browser at: http://localhost:6333/dashboard")
+print(f"   You will see collection '{collection_name}' next to 'laptop_products'")
