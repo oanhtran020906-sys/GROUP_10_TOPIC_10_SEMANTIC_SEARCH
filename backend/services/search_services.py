@@ -11,7 +11,7 @@ class SearchService:
     def __init__(self):
         self.embedding_service = embedding_service
 
-    def semantic_search(self, query: str, limit: int = 10, score_threshold: float = 0.1, filters: Optional[Dict] = None) -> List[Dict]:
+    def semantic_search(self, query: str, limit: int = 5, score_threshold: float = 0.1, filters: Optional[Dict] = None) -> List[Dict]:
         query_vector = self.embedding_service.get_embedding(query)
         
         if hasattr(query_vector, "tolist"):
@@ -33,6 +33,7 @@ class SearchService:
                 "price": r.get("price"),
                 "brand": r.get("brand", "Unknown"), # Nếu thiếu brand thì để mặc định
                 "category_id": r.get("category_id", 0), # Nếu thiếu category_id thì để 0
+                "budget_id": r.get("budget_id"),
                 "image_path": r.get("image_url") or r.get("image_path"),
                 "similarity_score": r.get("similarity_score"),
                 "search_type": "semantic"
@@ -41,7 +42,7 @@ class SearchService:
         return formatted_response
 
 
-    def traditional_search(self, query: str, category_id: int = None, min_price: float = None, max_price: float = None) -> List[Dict]:
+    def traditional_search(self, query: str, limit: int = 5, category_id: int = None, min_price: float = None, max_price: float = None) -> List[Dict]:
         """Đưa logic SQL cũ của bạn vào đây"""
         conn = get_db_connection()
         cur = conn.cursor()
@@ -63,6 +64,9 @@ class SearchService:
             if max_price:
                 sql += " AND price <= %s"
                 params.append(max_price)
+
+            sql += " LIMIT %s"
+            params.append(limit) # Sử dụng biến limit truyền vào hàm (mặc định là 5)
 
             cur.execute(sql, params)
             rows = cur.fetchall()

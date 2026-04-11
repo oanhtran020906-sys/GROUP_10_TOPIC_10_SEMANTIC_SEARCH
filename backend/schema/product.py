@@ -11,7 +11,8 @@ class ProductResponse(BaseModel):
     description: Optional[str]
     category_id: int
     budget_id: Optional[int] = None 
-    search_type: Optional[str] = "sql"
+    similarity_score: Optional[float] = None
+    search_type: Optional[str] = None
 
     class Config:
         from_attributes = True
