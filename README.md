@@ -14,6 +14,8 @@ Hệ thống tìm kiếm sản phẩm thông minh dành cho Laptop và Phụ ki�
 - **Python**: 3.9+ (khuyến khích 3.11)
 - **Docker & Docker Compose** (Khuyến khích)
 - **Node.js & npm** (Để chạy Frontend React)
+- **PostgreSQL:** 9+
+- **Qdrant**
 
 ---
 
@@ -67,7 +69,9 @@ docker-compose up -d
 
 Lưu ý: Nếu không dùng Docker, bạn phải tự cài Postgres (cổng 5432) và Qdrant (cổng 6333) cục bộ.
 
-Nếu bạn chưa cài Docker. Mở pgAdmin4, mở file database/schema.sql. chạy dòng
+Nếu bạn chưa cài Docker. 
+1. Postgre
+Mở pgAdmin4, mở file database/schema.sql. chạy dòng
 ```bash
 CREATE DATABASE semantic_search;
 ```
@@ -80,12 +84,17 @@ Quay lại terminal, chạy dòng dưới để thêm data sample vào database
 python scripts/seed_db.py
 ```
 
-### 3.chạy frontend
-```bash
-cd frontend
+2. Qdrant
+Chạy file qdrant.exe trên máy
+Để feed sample data vào Qdrant, mở terminal chạy lần lượt:
+``` bash
+python scripts\create_collection.py
 
-npm install
-
-npm run dev
+python scripts\insert_products_vector.py
 ```
-Ctrl click vào 'http://localhost:5173/'. Trình duyệt web sẽ hiện lên trang chủ của frontend
+
+### 3.chạy web
+```bash
+python main.py
+```
+mở file frontend2/index.html
