@@ -136,30 +136,60 @@ header {
     display: block;
 }
 
+
 /* ===== HERO SECTION ===== */
 .hero-section {
+    position: relative;
     height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap:20px;
+    gap: 20px;
+    background: #000;
+    overflow: hidden;
+}
+
+/* Layer blur gradient */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
     background: 
-        radial-gradient(circle at 20% 30%, rgba(255, 0, 106, 0.4), transparent 40%),
-        radial-gradient(circle at 80% 20%, rgba(38, 255, 208, 0.756), transparent 40%),
-        radial-gradient(circle at 50% 80%, rgba(0, 100, 255, 0.4), transparent 50%),
-        radial-gradient(circle at 70% 60%, rgba(150, 0, 255, 0.3), transparent 50%),
-        #000;
-    text-align: center;
-    
+        radial-gradient(circle at 20% 30%, #ff006a, transparent 50%),
+        radial-gradient(circle at 80% 20%, #26ffd0, transparent 50%),
+        radial-gradient(circle at 50% 80%, #0064ff, transparent 55%),
+        radial-gradient(circle at 70% 60%, #9600ff, transparent 55%);
+
+    filter: blur(120px);
+    opacity: 0.7;
+    z-index: 0;
+    animation: moveGradient 12s ease-in-out infinite;
+}
+
+@keyframes moveGradient {
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(150px, -100px) scale(1.1); }
+    50% { transform: translate(-120px, 120px) scale(1.2); }
+    75% { transform: translate(100px, 80px) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+/* Nội dung nổi lên trên */
+.hero-section > * {
+    position: relative;
+    z-index: 1;
+
 }
 
 /* LOGO */
 .brand-logo-big {
-    font-size: 150px;
+    font-size: 100px;
     font-weight: bold;
     z-index: 10;
     cursor: pointer;
+    
 
 }
 
@@ -169,7 +199,7 @@ header {
         0 0 5px #feaaff,
         0 0 10px #feaaff,
         0 0 20px #feaaff;
-    
+    font-family: "Press Start 2P";
 }
 
 .brand-lg {
@@ -178,9 +208,11 @@ header {
         0 0 5px #00ffe5,
         0 0 10px #00ffe5,
         0 0 20px #00ffe5;
+        font-family: "Press Start 2P";
     
 }
 .hero-subtitle {
+    font-size: 22px;
     letter-spacing: 8px;
     opacity: 0.7;
     margin-top: -40px;
@@ -190,6 +222,7 @@ header {
         0 0 5px #ffffff,
         0 0 10px #ffffff,
         0 0 20px #ffffff;
+    
 }
 /* SEARCH BAR */
 .big-search-wrapper {
@@ -270,6 +303,7 @@ header {
 .product-card img {
     width: 100%;
     border-radius: 10px;
+    ;
 }
 
 /* NAME */
@@ -293,7 +327,7 @@ header {
         font-size: 40px;
     }
 }
-
+/* ===== STARS ===== */
 .stars {
     position: fixed;
     width: 100%;
@@ -303,7 +337,7 @@ header {
 
     background: transparent;
     overflow: hidden;
-    z-index: 0;
+    z-index: 1;
 }
 
 /* tạo nhiều sao bằng box-shadow */
@@ -323,7 +357,7 @@ header {
         1200px 200px white,
         1500px 500px white;
 
-    animation: moveStars 20s linear infinite;
+    animation: moveStars 10s linear infinite;
 }
 
 @keyframes moveStars {

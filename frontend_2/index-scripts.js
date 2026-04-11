@@ -1,3 +1,4 @@
+
 // Dữ liệu mô tả, hãng 
 const allProducts = [
     { id: 0, name: "MacBook Pro M3", cat: "laptop", price: "45.990.000đ", brand: "Apple", desc: "Sức mạnh kinh ngạc từ chip M3. Màn hình Liquid Retina XDR đẹp nhất trên laptop. Thời lượng pin lên đến 22 giờ cho mọi công việc sáng tạo." },
