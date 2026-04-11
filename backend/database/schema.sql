@@ -1,5 +1,6 @@
 CREATE DATABASE semantic_search;
 
+begin;
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
@@ -42,4 +43,7 @@ ON products(brand);
 CREATE INDEX idx_products_name_gin ON products USING gin (name gin_trgm_ops);
 
 CREATE INDEX idx_products_price ON products(price);
+
+commit;
+
 

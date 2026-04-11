@@ -22,7 +22,7 @@ print(BASE_DIR)
 QDRANT_HOST = settings.QDRANT_HOST
 QDRANT_PORT = settings.QDRANT_PORT
 collection_name = settings.QDRANT_COLLECTION_NAME  # Tên collection muốn tạo
-csv_path = settings.DATA_PATH
+csv_path = 'C:/Users/Hi/Downloads/Group10/GROUP_10_TOPIC_10_SEMANTIC_SEARCH/backend/data/raw/products.csv'
 EMBEDDING_MODEL = settings.EMBEDDING_MODEL
 
 try:

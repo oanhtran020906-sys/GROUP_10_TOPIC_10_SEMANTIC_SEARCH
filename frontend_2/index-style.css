@@ -1,4 +1,6 @@
+@import url("animation.css");
 /* RESET */
+
 * {
     margin: 0;
     padding: 0;
@@ -34,6 +36,7 @@ header {
     cursor: pointer;
     font-weight: bold;
     font-size : 25px
+    
 }
 
 /* SEARCH MODE */
@@ -89,9 +92,9 @@ header {
 /* ===== SIDEBAR ===== */
 .sidebar {
     position: fixed;
-    left: -260px;
+    left: -350px;
     top: 0;
-    width: 260px;
+    width: 350px;
     height: 100%;
     background: #111;
     padding: 20px;
@@ -99,83 +102,13 @@ header {
     z-index: 1001;
 }
 
-#sidebar h2 {
+.sidebar h2 {
     color: #fff;
     text-shadow: 0 0 10px #ffffff; 
     font-size: 1.8rem;
     padding: 20px;
-    margin-bottom: 30px;
-}
-
-
-#sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-
-#sidebar ul li {
-    position: relative; 
-    border-bottom: 1px solid #1a1a1a;
-    transition: all 0.3s ease;
-}
-
-#sidebar ul li::before {
-    content: "";
-    position: absolute;
-    /* Tạo một khối gradient nhỏ hơn hoặc bằng kích thước ô */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    
-    /* Sử dụng Linear Gradient như bạn muốn */
-    background: linear-gradient(135deg, #feaaff6b, #0015ff4f);
-    opacity: 0;
-    z-index: 0;
-    transition: opacity 0.5s ease;
-}
-
-/* 6. Text của Item (a tag) */
-#sidebar ul li a {
-    position: relative; /* Nằm trên lớp ::before */
-    z-index: 1;
-    display: block;
-    padding: 15px 25px;
-    color: #aaa; /* Màu xám mặc định */
-    text-decoration: none;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    position: relative;
-    border-bottom: 1px solid #1a1a1a;
-    
-    overflow: hidden; 
-    /* Đảm bảo bo góc nếu ô vuông của bạn có bo góc */
-    border-radius: 4px; 
-    
-}
-
-/* 7. Hover Effect - Khi di chuột vào item */
-#sidebar ul li:hover::before {
-    opacity: 1; /* Hiện glow nền */
-}
-
-#sidebar ul li:hover a {
-    color: #fff; /* Chữ trắng */
-    text-shadow: 0 0 10px #feaaff; /* Chữ neon xanh ngọc */
-    transform: translateX(10px); /* Nhích nhẹ sang phải */
-}
-
-/* 8. Active State - Khi menu được chọn (ví dụ Laptop) */
-#sidebar ul li.active {
-    background-color: #ffffff;
-    border-left: 3px solid #feaaff; /* Vạch neon bên trái */
-}
-
-#sidebar ul li.active a {
-    color: #fff;
-    font-weight: bold;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #b1b1b144;
 }
 
 
@@ -184,23 +117,25 @@ header {
     left: 0;
 }
 
-.sidebar h2 {
-    font-size: 30px;
-    margin-bottom: 20px;
-    margin-top: 9px;
-    margin-left:10px;
-}
+
 
 .category-list li {
-    font-size:20px;
+    margin: 6px 0;
+    font-size:22px;
     list-style: none;
     padding: 20px;
     cursor: pointer;
-    border-bottom: 1px solid #6c6c6c4f;
+    border-bottom: 0px;
+    transition:all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 50px;
 }
 
 .category-list li:hover {
+    transform:translateX(5px);
     background: #222;
+    border-radius: 50px;
+    color:#00ccff;
+
 }
 
 /* OVERLAY */
@@ -249,13 +184,7 @@ header {
     animation: moveGradient 12s ease-in-out infinite;
 }
 
-@keyframes moveGradient {
-    0% { transform: translate(0, 0) scale(1); }
-    25% { transform: translate(150px, -100px) scale(1.1); }
-    50% { transform: translate(-120px, 120px) scale(1.2); }
-    75% { transform: translate(100px, 80px) scale(1.05); }
-    100% { transform: translate(0, 0) scale(1); }
-}
+
 
 /* Nội dung nổi lên trên */
 .hero-section > * {
@@ -326,6 +255,7 @@ header {
 
 /* hover đẹp hơn */
 .scroll-text:hover {
+    font-weight: bold;
     opacity: 1;
     transform: scale(1.1);
     text-shadow: 0 0 10px #fff, 0 0 20px #ff4ecd;
@@ -346,7 +276,7 @@ header {
     box-shadow:
         0 0 8px #ffffff,
         0 0 20px #ffffff,
-        0 0 40px rgba(255, 255, 255, 0.6);
+        0 0 40px #ffffff59;
 }
 
 /* ===== MAIN CONTENT ===== */
@@ -394,28 +324,37 @@ header {
 .product-card:hover {
     transform: translateY(-5px);
     box-shadow:
-        0 0 10px rgba(255, 255, 255, 0.6),
-        0 0 20px rgba(255, 255, 255, 0.5),
-        0 0 40px rgba(255, 255, 255, 0.4);
+        0 0 10px #ffffff59,
+        0 0 20px #ffffff33,
+        0 0 40px #ffffff99;
+    cursor: pointer;
 }
 
 
 /* IMAGE */
 .product-card img {
+    border: 8px solid white;
     width: 100%;
     border-radius: 10px;
-    ;
+    aspect-ratio: 4/3;
+    
 }
 
 /* NAME */
 .product-name {
     margin: 10px 0;
     font-weight: bold;
+    font-size:30px;
 }
 
 /* PRICE */
 .product-price {
-    color: #00ffe5;
+    font-size : 30px;
+    color: #ffffff;
+    background: #e651a5;
+    padding: 8px 12px; 
+    border-radius: 10px;
+    display: inline-block; 
 }
 
 /* ===== RESPONSIVE ===== */
@@ -460,14 +399,4 @@ header {
 
     animation: moveStars 10s linear infinite;
 }
-
-@keyframes moveStars {
-    from {
-        transform: translateY(0);
-    }
-    to {
-        transform: translateY(-1000px);
-    }
-}   
-
 

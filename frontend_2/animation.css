@@ -1,0 +1,22 @@
+@keyframes moveStars {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-1000px);
+    }
+}   
+
+@keyframes float {
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes moveGradient {
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(150px, -100px) scale(1.1); }
+    50% { transform: translate(-120px, 120px) scale(1.2); }
+    75% { transform: translate(100px, 80px) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1); }
+}

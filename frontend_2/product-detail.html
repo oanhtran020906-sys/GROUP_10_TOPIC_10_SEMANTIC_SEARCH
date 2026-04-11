@@ -2,45 +2,45 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết sản phẩm | TechnaLG</title>
+    <title>Chi tiết sản phẩm</title>
     <link rel="stylesheet" href="product-detail-style.css">
 </head>
 <body>
 
-    <header>
-        <nav>
-            <ul>
-                <li><a href="index.html">← Quay lại trang chủ</a></li>
-            </ul>
-        </nav>
-    </header>
+<header>
+    <div class="logo" onclick="window.location.href='index.html'">
+        TECHNALG
+    </div>
+</header>
 
-    <main>
-        <section id="product-main">
-            <div class="product-gallery">
-                <img src="" alt="Sản phẩm" id="product-img" style="max-width: 100%; border-radius: 10px;">
+<main>
+    <div class="product-detail-container">
+
+        <!-- ẢNH -->
+        <div class="product-image-box">
+            <img id="product-img" src="" alt="product">
+        </div>
+
+        <!-- INFO -->
+        <div class="product-info">
+
+            <h1 id="product-title">Tên sản phẩm</h1>
+
+            <div id="product-price" class="price">0đ</div>
+
+            <div id="product-desc" class="description">
+                Mô tả sản phẩm...
             </div>
 
-            <div class="product-summary">
-                <h1 id="product-title">Đang tải tên sản phẩm...</h1>
-                
-                <p class="price" id="product-price" style="font-size: 24px; color: #00ffff; font-weight: bold;">Giá: --</p>
-                
-                <div id="description" style="margin-top: 20px;">
-                    <h3>Mô tả sản phẩm:</h3>
-                    <div id="product-desc" style="line-height: 1.6; color: #ccc;">
-                        Đang tải mô tả...
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+            <button class="buy-btn">MUA NGAY</button>
 
-    <footer>
-        <p>&copy; 2026 TechnaLG Ecosystem</p>
-    </footer>
+        </div>
 
-    <script src="product-detail-scripts.js"></script>
+    </div>
+</main>
+
+<!-- JS của bạn -->
+<script src="product-detail-scripts.js"></script>
+
 </body>
 </html>
