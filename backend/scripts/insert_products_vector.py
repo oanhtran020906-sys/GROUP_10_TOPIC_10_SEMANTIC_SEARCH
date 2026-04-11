@@ -16,6 +16,9 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import VectorParams, Distance, PointStruct
 from sentence_transformers import SentenceTransformer
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print(BASE_DIR)
+
 print("=" * 60)
 print("📦 INSERTING PRODUCTS TO QDRANT SERVER")
 print("=" * 60)
@@ -40,7 +43,7 @@ except Exception as e:
 # 2. CẤU HÌNH
 # ============================================
 collection_name = "tech_products"  # Tên collection muốn tạo
-csv_path = "data/raw/products.csv"  # Đường dẫn file CSV
+csv_path = os.path.join(BASE_DIR, "data", "raw", "products.csv")  # Đường dẫn file CSV
 
 # ============================================
 # 3. LOAD MODEL
