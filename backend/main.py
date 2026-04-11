@@ -7,7 +7,7 @@ from config import settings
 import os
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="Product Semantic Search API")
+app = FastAPI(title="TechnaLG")
 
 # Cấu hình CORS
 app.add_middleware(
