@@ -51,6 +51,7 @@ class SearchService:
                 SELECT id, name, brand, price, image_path, description, category_id, budget_id 
                 FROM products 
                 WHERE (name ILIKE %s OR description ILIKE %s OR brand ILIKE %s)
+                LIMIT %s
             """
             search_term = f"%{query}%"
             params = [search_term, search_term, search_term]
@@ -65,7 +66,6 @@ class SearchService:
                 sql += " AND price <= %s"
                 params.append(max_price)
 
-            sql += " LIMIT %s"
             params.append(limit) # Sử dụng biến limit truyền vào hàm (mặc định là 5)
 
             cur.execute(sql, params)
