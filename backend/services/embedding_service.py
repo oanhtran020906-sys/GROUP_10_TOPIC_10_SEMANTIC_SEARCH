@@ -12,7 +12,7 @@ import os
 
 # Thêm đường dẫn để import config
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config import config
+from config import settings
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -36,9 +36,9 @@ class EmbeddingService:
         if self._initialized:
             return
         
-        self.model_name = config.EMBEDDING_MODEL
+        self.model_name = settings.EMBEDDING_MODEL
         self.model = None
-        self.vector_size = config.VECTOR_SIZE
+        self.vector_size = settings.VECTOR_SIZE
         
         self._load_model()
         self._initialized = True
