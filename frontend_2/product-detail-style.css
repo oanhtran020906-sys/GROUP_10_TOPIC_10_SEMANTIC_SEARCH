@@ -1,0 +1,184 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+/* CHỈNH SỬA SCROLL CHO MƯỢT HƠN */
+html {
+    scroll-behavior: smooth;
+}
+/* BODY */
+body {
+    background: #0f0f0f;
+    color: #fff;
+}
+
+/* ===== HEADER ===== */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100px;
+    background: rgb(0 0 0 / 63%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 1000;
+}
+
+/* MENU BUTTON */
+.menu-btn {
+    cursor: pointer;
+    font-weight: bold;
+    font-size : 25px
+}
+
+/* SEARCH MODE */
+.search-options {
+    display: flex;
+    gap: 10px;      
+}
+.search-icon {
+    position: absolute;
+    right: 30px;      
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.search-icon:hover {
+    opacity: 1;
+}
+
+/* Trạng thái mặc định (khi chưa ấn) */
+.option {
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 25px;
+    color: #888;
+    background: rgb(255 0 0 / 0%);
+    transition: 0.4s cubic-bezier(0.86, -0.03, 0, 1);
+    border: 3px solid rgb(255 255 255);
+}
+
+/* Khi SQL được chọn: Hiện màu Tím */
+#sql-opt.active {
+    background: var(--brand-techna); 
+    color: #feaaff;
+    font-weight: bold;
+    box-shadow: 0 0 20px rgb(254 180 255);
+    border-color: var(--brand-techna);
+}
+
+/* Khi VECTOR được chọn: Hiện màu Xanh */
+#vec-opt.active {
+    background: var(--brand-lg); 
+    color: #00ffe5;
+    font-weight: bold;
+    box-shadow: 0 0 20px rgb(0 255 229);
+    border-color: var(--brand-lg);
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    position: fixed;
+    left: -260px;
+    top: 0;
+    width: 260px;
+    height: 100%;
+    background: #111;
+    padding: 20px;
+    transition: 0.3s;
+    z-index: 1001;
+}
+
+.sidebar.active {
+    left: 0;
+}
+
+.sidebar h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+    margin-top: 9px;
+    margin-left:10px;
+}
+
+.category-list li {
+    font-size:20px;
+    list-style: none;
+    padding: 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #6c6c6c4f;
+}
+
+.category-list li:hover {
+    background: #222;
+}
+
+/* OVERLAY */
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    z-index: 1000;
+}
+
+.overlay.active {
+    display: block;
+}
+
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background: #000;
+    overflow: hidden;
+}
+
+/* Layer blur gradient */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: 
+        radial-gradient(circle at 20% 30%, #ff006a, transparent 50%),
+        radial-gradient(circle at 80% 20%, #26ffd0, transparent 50%),
+        radial-gradient(circle at 50% 80%, #0064ff, transparent 55%),
+        radial-gradient(circle at 70% 60%, #9600ff, transparent 55%);
+
+    filter: blur(120px);
+    opacity: 0.7;
+    z-index: 0;
+    animation: moveGradient 12s ease-in-out infinite;
+}
+
+@keyframes moveGradient {
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(150px, -100px) scale(1.1); }
+    50% { transform: translate(-120px, 120px) scale(1.2); }
+    75% { transform: translate(100px, 80px) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+/* Nội dung nổi lên trên */
+.hero-section > * {
+    position: relative;
+    z-index: 1;
+
+}
