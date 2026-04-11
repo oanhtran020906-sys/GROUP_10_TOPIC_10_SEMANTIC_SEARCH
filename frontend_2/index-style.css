@@ -73,7 +73,7 @@ header {
     background: var(--brand-techna); 
     color: #feaaff;
     font-weight: bold;
-    box-shadow: 0 0 20px rgb(254 180 255);
+    box-shadow: 0 0 20px #feaaff;
     border-color: var(--brand-techna);
 }
 
@@ -82,7 +82,7 @@ header {
     background: var(--brand-lg); 
     color: #00ffe5;
     font-weight: bold;
-    box-shadow: 0 0 20px rgb(0 255 229);
+    box-shadow: 0 0 20px #00ffe5;
     border-color: var(--brand-lg);
 }
 
@@ -98,6 +98,87 @@ header {
     transition: 0.3s;
     z-index: 1001;
 }
+
+#sidebar h2 {
+    color: #fff;
+    text-shadow: 0 0 10px #ffffff; 
+    font-size: 1.8rem;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+
+#sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+#sidebar ul li {
+    position: relative; 
+    border-bottom: 1px solid #1a1a1a;
+    transition: all 0.3s ease;
+}
+
+#sidebar ul li::before {
+    content: "";
+    position: absolute;
+    /* Tạo một khối gradient nhỏ hơn hoặc bằng kích thước ô */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* Sử dụng Linear Gradient như bạn muốn */
+    background: linear-gradient(135deg, #feaaff6b, #0015ff4f);
+    opacity: 0;
+    z-index: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* 6. Text của Item (a tag) */
+#sidebar ul li a {
+    position: relative; /* Nằm trên lớp ::before */
+    z-index: 1;
+    display: block;
+    padding: 15px 25px;
+    color: #aaa; /* Màu xám mặc định */
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    border-bottom: 1px solid #1a1a1a;
+    
+    overflow: hidden; 
+    /* Đảm bảo bo góc nếu ô vuông của bạn có bo góc */
+    border-radius: 4px; 
+    
+}
+
+/* 7. Hover Effect - Khi di chuột vào item */
+#sidebar ul li:hover::before {
+    opacity: 1; /* Hiện glow nền */
+}
+
+#sidebar ul li:hover a {
+    color: #fff; /* Chữ trắng */
+    text-shadow: 0 0 10px #feaaff; /* Chữ neon xanh ngọc */
+    transform: translateX(10px); /* Nhích nhẹ sang phải */
+}
+
+/* 8. Active State - Khi menu được chọn (ví dụ Laptop) */
+#sidebar ul li.active {
+    background-color: #ffffff;
+    border-left: 3px solid #feaaff; /* Vạch neon bên trái */
+}
+
+#sidebar ul li.active a {
+    color: #fff;
+    font-weight: bold;
+}
+
+
 
 .sidebar.active {
     left: 0;
