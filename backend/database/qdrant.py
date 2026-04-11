@@ -3,6 +3,7 @@ Qdrant Vector Database Manager - Tối ưu cho Sentence-Transformers
 """
 
 import os
+import sys
 import uuid
 from typing import List, Dict, Any, Optional, Tuple
 from qdrant_client import QdrantClient
@@ -18,6 +19,9 @@ from qdrant_client.models import (
 )
 from dotenv import load_dotenv
 import logging
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from config import settings
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -37,7 +41,7 @@ class QdrantVectorStore:
             port=int(os.getenv("QDRANT_PORT", 6333)),
             timeout=30
         )
-        self.collection_name = os.getenv("QDRANT_COLLECTION", "products")
+        self.collection_name = settings.QDRANT_COLLECTION_NAME
         self.embedding_service = embedding_service
         self.vector_size = None
         

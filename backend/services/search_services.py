@@ -2,7 +2,8 @@ from typing import List, Dict, Optional, Any
 import logging
 from database.postgres import get_db_connection, release_db_connection
 from services.embedding_service import embedding_service
-from database.qdrant import qdrant_manager
+from database.qdrant import qdrant_store
+
 
 logger = logging.getLogger(__name__)
 
@@ -10,25 +11,35 @@ class SearchService:
     def __init__(self):
         self.embedding_service = embedding_service
 
-    def semantic_search(self, query: str, limit: int = 10, score_threshold: float = 0.5, filters: Optional[Dict] = None) -> List[Dict]:
-        # Giữ nguyên code vector search của bạn vì nó khá ổn
+    def semantic_search(self, query: str, limit: int = 10, score_threshold: float = 0.1, filters: Optional[Dict] = None) -> List[Dict]:
         query_vector = self.embedding_service.get_embedding(query)
-        results = qdrant_manager.search(
+        
+        if hasattr(query_vector, "tolist"):
+            query_vector = query_vector.tolist()
+
+        results = qdrant_store.semantic_search(
             query_vector=query_vector,
             limit=limit,
-            score_threshold=score_threshold,
-            # Lưu ý: check lại bên qdrant_manager xem tham số là filter_conditions hay query_filter
+            score_threshold=score_threshold
+            # Nếu bạn có truyền thêm category_filter, min_price... thì thêm vào đây
         )
         
-        return [{
-            "id": r.id,
-            "name": r.payload.get("name"),
-            "brand": r.payload.get("brand"),
-            "price": r.payload.get("price"),
-            "image_path": r.payload.get("image_path"), # Đổi image thành image_path cho khớp database
-            "similarity_score": round(r.score * 100, 2),
-            "search_type": "semantic"
-        } for r in results]
+        formatted_response = []
+        for r in results:
+            formatted_response.append({
+                "id": r.get("product_id"),         # FastAPI đòi 'id', ta lấy từ 'product_id'
+                "name": r.get("name"),
+                "description": r.get("description"),
+                "price": r.get("price"),
+                "brand": r.get("brand", "Unknown"), # Nếu thiếu brand thì để mặc định
+                "category_id": r.get("category_id", 0), # Nếu thiếu category_id thì để 0
+                "image_path": r.get("image_url") or r.get("image_path"),
+                "similarity_score": r.get("similarity_score"),
+                "search_type": "semantic"
+            })
+        
+        return formatted_response
+
 
     def traditional_search(self, query: str, category_id: int = None, min_price: float = None, max_price: float = None) -> List[Dict]:
         """Đưa logic SQL cũ của bạn vào đây"""
