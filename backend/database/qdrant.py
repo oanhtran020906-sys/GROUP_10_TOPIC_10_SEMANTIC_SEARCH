@@ -149,7 +149,7 @@ class QdrantVectorStore:
     def semantic_search(
         self, 
         query_vector: List[float], 
-        limit: int = 10,
+        limit: int = 5,
         category_filter: Optional[str] = None,
         min_price: Optional[float] = None,
         max_price: Optional[float] = None,
@@ -201,8 +201,9 @@ class QdrantVectorStore:
                 "description": hit.payload.get("description"),
                 "category": hit.payload.get("category"),
                 "price": hit.payload.get("price"),
-                "image_url": hit.payload.get("image_url"),
+                "image_path": hit.payload.get("image_path"),
                 "similarity_score": round(hit.score, 4),
+                "budget_id": hit.payload.get("budget_id"),
                 "similarity_percent": round(hit.score * 100, 1)
             })
         

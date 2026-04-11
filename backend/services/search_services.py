@@ -11,7 +11,7 @@ class SearchService:
     def __init__(self):
         self.embedding_service = embedding_service
 
-    def semantic_search(self, query: str, limit: int = 10, score_threshold: float = 0.1, filters: Optional[Dict] = None) -> List[Dict]:
+    def semantic_search(self, query: str, limit: int = 5, score_threshold: float = 0.1, filters: Optional[Dict] = None) -> List[Dict]:
         query_vector = self.embedding_service.get_embedding(query)
         
         if hasattr(query_vector, "tolist"):
@@ -33,6 +33,7 @@ class SearchService:
                 "price": r.get("price"),
                 "brand": r.get("brand", "Unknown"), # Nếu thiếu brand thì để mặc định
                 "category_id": r.get("category_id", 0), # Nếu thiếu category_id thì để 0
+                "budget_id": r.get("budget_id"),
                 "image_path": r.get("image_url") or r.get("image_path"),
                 "similarity_score": r.get("similarity_score"),
                 "search_type": "semantic"
@@ -41,7 +42,7 @@ class SearchService:
         return formatted_response
 
 
-    def traditional_search(self, query: str, category_id: int = None, min_price: float = None, max_price: float = None) -> List[Dict]:
+    def traditional_search(self, query: str, limit: int = 5, category_id: int = None, min_price: float = None, max_price: float = None) -> List[Dict]:
         """Đưa logic SQL cũ của bạn vào đây"""
         conn = get_db_connection()
         cur = conn.cursor()
@@ -50,6 +51,7 @@ class SearchService:
                 SELECT id, name, brand, price, image_path, description, category_id, budget_id 
                 FROM products 
                 WHERE (name ILIKE %s OR description ILIKE %s OR brand ILIKE %s)
+                LIMIT %s
             """
             search_term = f"%{query}%"
             params = [search_term, search_term, search_term]
@@ -64,6 +66,8 @@ class SearchService:
                 sql += " AND price <= %s"
                 params.append(max_price)
 
+            params.append(limit) # Sử dụng biến limit truyền vào hàm (mặc định là 5)
+
             cur.execute(sql, params)
             rows = cur.fetchall()
             return [{
@@ -74,16 +78,67 @@ class SearchService:
             cur.close()
             release_db_connection(conn)
 
+    def get_bestseller(self, limit: int = 8, category_id: Optional[int] = None) -> List[Dict]:
+        """Lấy sản phẩm ngẫu nhiên từ PostgreSQL để làm sản phẩm nổi bật"""
+        conn = get_db_connection()
+        cur = conn.cursor()
+        try:
+            # RANDOM() trong PostgreSQL giúp lấy dữ liệu ngẫu nhiên mỗi lần load trang
+            sql = "SELECT id, name, brand, price, image_path, description, category_id, budget_id FROM products"
+            params = []
+
+            if category_id:
+                sql += " WHERE category_id = %s"
+                params.append(category_id)
+            
+            sql += " ORDER BY RANDOM() LIMIT %s"
+            params.append(limit)
+
+            cur.execute(sql, params)
+            rows = cur.fetchall()
+            
+            return [{
+                "id": r[0], "name": r[1], "brand": r[2], "price": r[3],
+                "image_path": r[4], "description": r[5], 
+                "category_id": r[6], "budget_id": r[7], 
+                "search_type": "sql" # Đánh dấu để frontend biết đây là dữ liệu gốc
+            } for r in rows]
+        finally:
+            cur.close()
+            release_db_connection(conn)
+
+    def get_product_by_id(self, product_id: int) -> Optional[Dict]:
+        """Lấy thông tin chi tiết của một sản phẩm dựa trên ID"""
+        conn = get_db_connection()
+        cur = conn.cursor()
+        try:
+            sql = "SELECT id, name, brand, price, image_path, description, category_id, budget_id FROM products WHERE id = %s"
+            cur.execute(sql, (product_id,))
+            r = cur.fetchone()
+            
+            if not r:
+                return None
+                
+            return {
+                "id": r[0], "name": r[1], "brand": r[2], "price": r[3],
+                "image_path": r[4], "description": r[5], 
+                "category_id": r[6], "budget_id": r[7],
+                "search_type": "sql"
+            }
+        finally:
+            cur.close()
+            release_db_connection(conn)
+
+    def get_all_categories():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        try:
+            cur.execute("SELECT id, name FROM categories ORDER BY name ASC;")
+            return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+        finally:
+            cur.close()
+            release_db_connection(conn)
+
 # Khởi tạo instance duy nhất
 search_service = SearchService()
 
-# Giữ lại hàm này bên ngoài class để không làm hỏng main.py cũ
-def get_all_categories():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    try:
-        cur.execute("SELECT id, name FROM categories ORDER BY name ASC;")
-        return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
-    finally:
-        cur.close()
-        release_db_connection(conn)
