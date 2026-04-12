@@ -67,11 +67,11 @@ python scripts/seed_db.py
 ```
 
 ``` bash
-python scripts\create_collection.py
+python scripts/create_collection.py
 ```
 
 ``` bash
-python scripts\insert_products_vector.py
+python scripts/insert_products_vector.py
 ```
 
 ### 3.chạy web
