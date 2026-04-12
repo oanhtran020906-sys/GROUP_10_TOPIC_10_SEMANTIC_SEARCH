@@ -1,5 +1,3 @@
-CREATE DATABASE semantic_search;
-
 begin;
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,

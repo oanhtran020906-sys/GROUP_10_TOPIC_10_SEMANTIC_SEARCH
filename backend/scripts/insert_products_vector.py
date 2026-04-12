@@ -18,14 +18,11 @@ from qdrant_client.models import VectorParams, Distance, PointStruct
 from sentence_transformers import SentenceTransformer
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-print(BASE_DIR)
 QDRANT_HOST = settings.QDRANT_HOST
 QDRANT_PORT = settings.QDRANT_PORT
 collection_name = settings.QDRANT_COLLECTION_NAME 
 csv_path = os.path.join(BASE_DIR, 'data\\raw\products.csv')
 EMBEDDING_MODEL = settings.EMBEDDING_MODEL
-
-print(csv_path)
 
 try:
     client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
@@ -148,4 +145,4 @@ print(f"📊 Products indexed: {collection_info.points_count}")
 print(f"⏱️ Time: {elapsed:.2f} seconds")
 
 print("\n🌐 REFRESH your browser at: http://localhost:6333/dashboard")
-print(f"   You will see collection '{collection_name}' next to 'laptop_products'")
+print(f"   You will see collection '{collection_name}'")

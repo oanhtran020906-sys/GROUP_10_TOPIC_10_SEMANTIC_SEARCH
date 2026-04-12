@@ -5,7 +5,6 @@ Tạo collection tech_products trong Qdrant
 import sys
 import os
 
-# Thêm đường dẫn
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config import settings
@@ -14,10 +13,7 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import VectorParams, Distance
 from services.embedding_service import embedding_service
 
-# ============================================
-# CẤU HÌNH TRỰC TIẾP
-# ============================================
-COLLECTION_NAME = settings.QDRANT_COLLECTION_NAME # ĐÃ SỬA
+COLLECTION_NAME = settings.QDRANT_COLLECTION_NAME
 QDRANT_PATH = settings.QDRANT_DATA_PATH
 
 def create_collection():

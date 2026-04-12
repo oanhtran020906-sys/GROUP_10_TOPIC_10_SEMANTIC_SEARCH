@@ -57,39 +57,20 @@ Cài đặt thư viện
 ```bash
 pip install -r requirements.txt
 ```
-Lưu ý cho team: nếu import thư viện gì mới thì bổ sung vào file backend/requirements.txt
 
 ### 2. Triển khai Database
-Nếu bạn đã cài Docker, chỉ cần một câu lệnh duy nhất để dựng Postgres và Qdrant:
-
-```bash
-# hiện tại chưa có cái này, nhg sau sẽ viết
-docker-compose up -d
-```
-
-Lưu ý: Nếu không dùng Docker, bạn phải tự cài Postgres (cổng 5432) và Qdrant (cổng 6333) cục bộ.
-
-Nếu bạn chưa cài Docker. 
-1. Postgre
-Mở pgAdmin4, mở file database/schema.sql. chạy dòng
-```bash
-CREATE DATABASE semantic_search;
-```
-
-Đổi connection sang sematic_search database, chạy các dòng còn lại.
-
-Quay lại terminal, chạy dòng dưới để thêm data sample vào database
+Đảm bảo đang chạy file qdrant.exe
+Vào terminal, chạy dòng dưới để setup PostgreSQL và Qdrant
 
 ```bash
 python scripts/seed_db.py
 ```
 
-2. Qdrant
-Chạy file qdrant.exe trên máy
-Để feed sample data vào Qdrant, mở terminal chạy lần lượt:
 ``` bash
 python scripts\create_collection.py
+```
 
+``` bash
 python scripts\insert_products_vector.py
 ```
 
