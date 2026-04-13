@@ -12,6 +12,7 @@ class Config:
     QDRANT_PORT = int(os.getenv("QDRANT_PORT", 6333))
     QDRANT_COLLECTION_NAME = os.getenv("QDRANT_COLLECTION_NAME", "tech_products")
     QDRANT_DATA_PATH = os.getenv("QDRANT_DATA_PATH", "./qdrant_data")
+    QDRANT_IMG_COLLECTION = os.getenv('QDRANT_IMG_COLLECTION', 'tech_img')
 
     #Sentence-Transformers Configuration
     EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL_NAME", "keepitreal/vietnamese-sbert")

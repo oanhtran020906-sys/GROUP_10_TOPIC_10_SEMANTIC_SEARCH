@@ -209,5 +209,4 @@ class ImageEmbeddingService:
             logger.error(f"Failed to generate text embedding for image search: {e}")
             return [0.0] * self.dimension
 
-# Singleton instance
 image_embedding_service = ImageEmbeddingService()

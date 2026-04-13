@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 QDRANT_HOST = settings.QDRANT_HOST
 QDRANT_PORT = settings.QDRANT_PORT
 collection_name = settings.QDRANT_COLLECTION_NAME 
-csv_path = os.path.join(BASE_DIR, 'data\\raw\products.csv')
+csv_path = os.path.join(BASE_DIR, 'data', 'raw', 'products.csv')
 EMBEDDING_MODEL = settings.EMBEDDING_MODEL
 
 try:
