@@ -1,19 +1,19 @@
 begin;
 CREATE TABLE categories (
-    id SERIAL PRIMARY KEY,
+    category_id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE budgets (
-    id SERIAL PRIMARY KEY,
+    budget_id SERIAL PRIMARY KEY,
     name VARCHAR(20) UNIQUE NOT NULL
 );
 
 CREATE TABLE products (
-    id SERIAL PRIMARY KEY,
+    product_id SERIAL PRIMARY KEY,
 
-    category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
-	budget_id int  REFERENCES budgets(id) ON DELETE SET NULL,
+    category_id INTEGER REFERENCES categories(category_id) ON DELETE SET NULL,
+	budget_id int  REFERENCES budgets(budget_id) ON DELETE SET NULL,
 
     name VARCHAR(255) NOT NULL,
     brand VARCHAR(100),

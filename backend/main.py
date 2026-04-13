@@ -1,6 +1,6 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException, File, UploadFile
 from typing import List, Optional
-from services.search_services import search_service # Import instance mới
+from services.search_services import search_service
 from schema.product import ProductResponse
 from fastapi.staticfiles import StaticFiles
 from config import settings
@@ -69,6 +69,36 @@ async def vector_search(q: str = Query(..., description="Tìm kiếm ý nghĩa")
     print(f"🔍 [Vector Search] Keyword: '{q}' | Found: {len(results)} products")
     return results
 
+#Endpoint cho search = hybrid
+@app.get("/search/hybrid", response_model=List[ProductResponse])
+async def hybrid_search(
+    q: str = Query(..., description="Tìm kiếm kết hợp"),
+    limit: int = Query(8, ge=1, le=50),
+    semantic_w: float = Query(0.7, description="Trọng số AI (0-1)"),
+    keyword_w: float = Query(0.3, description="Trọng số Từ khóa (0-1)")
+):
+    results = search_service.hybrid_search(
+        query=q, 
+        limit=limit, 
+        semantic_weight=semantic_w, 
+        keyword_weight=keyword_w
+    )
+    print(f"🚀 [Hybrid Search] Query: '{q}' | Combined Results: {len(results)}")
+    return results
+
+#Endpoint cho search = img
+@app.post("/search/image", response_model=List[ProductResponse])
+async def image_search(
+    file: UploadFile = File(...),
+    limit: int = Query(12, ge=1, le=50)
+):
+    
+        contents = await file.read()
+        results = search_service.image_search(image_bytes=contents, limit=limit)
+        
+        print(f"📸 [Image Search] File: {file.filename} | Tìm thấy: {len(results)} sản phẩm")
+        return results
+    
 #Lấy danh sách danh mục để đổ vào thanh Filter trên Frontend
 @app.get("/categories")
 async def get_categories():

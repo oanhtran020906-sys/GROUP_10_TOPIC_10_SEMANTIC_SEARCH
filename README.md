@@ -68,10 +68,10 @@ python scripts/seed_db.py
 
 ``` bash
 python scripts/create_collection.py
-```
 
-``` bash
 python scripts/insert_products_vector.py
+
+python scripts/setup_img.py
 ```
 
 ### 3.chạy web

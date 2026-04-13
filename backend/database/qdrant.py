@@ -149,7 +149,7 @@ class QdrantVectorStore:
     def semantic_search(
         self, 
         query_vector: List[float], 
-        limit: int = 5,
+        limit: int = 4,
         category_filter: Optional[str] = None,
         min_price: Optional[float] = None,
         max_price: Optional[float] = None,
