@@ -62,12 +62,16 @@ async function filterBy(catId, catName) {
     }
 }
 
-// 4. Hàm Search (SQL & Vector)
+// 4. Hàm Search (SQL, Vector, Hybrid)
 async function handleSearch() {
     const query = document.getElementById('search-input').value;
     if (!query.trim()) return;
 
-    const endpoint = currentSearchMode === 'sql' ? '/search/sql' : '/search/vector';
+    const endpoint = currentSearchMode === 'sql'
+    ? '/search/sql'
+    : currentSearchMode === 'vector'
+        ? '/search/vector'
+        : '/search/hybrid';
     
     try {
         const response = await fetch(`${API_URL}${endpoint}?q=${encodeURIComponent(query)}`);
@@ -79,17 +83,25 @@ async function handleSearch() {
         console.error("Lỗi search:", error);
     }
 }
+// 5. Hàm Search by image
+
 
 // --- Các hàm hỗ trợ UI ---
 function setMode(mode) {
     currentSearchMode = mode;
     const sqlOpt = document.getElementById('sql-opt');
     const vecOpt = document.getElementById('vec-opt');
+    const hybridOpt = document.getElementById('hybrid-opt');
     const input = document.getElementById('search-input');
 
     sqlOpt.classList.toggle('active', mode === 'sql');
     vecOpt.classList.toggle('active', mode === 'vec');
-    input.placeholder = mode === 'sql' ? "Tìm kiếm bằng SQL..." : "Tìm kiếm bằng VECTOR...";
+    hybridOpt.classList.toggle('active', mode === 'hybrid');
+    input.placeholder = mode === 'sql' 
+    ? "Tìm kiếm bằng SQL..."
+    : mode === 'vec'
+    ? "Tìm kiếm bằng VECTOR..."
+    : "Tìm kiếm bằng HYBRID...";
 }
 
 function goToDetail(id) {
@@ -112,4 +124,32 @@ window.onload = () => {
             if (e.key === 'Enter') handleSearch();
         });
     }
+};
+
+const modal = document.getElementById("lensModal");
+const openBtn = document.getElementById("openLensBtn");
+const closeBtn = document.getElementById("closeLensBtn");
+const uploadArea = document.getElementById("uploadArea");
+const input = document.getElementById("imageInput");
+
+// mở popup
+openBtn.onclick = () => {
+  modal.style.display = "flex";
+};
+
+// đóng popup
+closeBtn.onclick = () => {
+  modal.style.display = "none";
+};
+
+// click ngoài để đóng
+window.onclick = (e) => {
+  if (e.target === modal) {
+    modal.style.display = "none";
+  }
+};
+
+// click vùng upload → mở file
+uploadArea.onclick = () => {
+  input.click();
 };

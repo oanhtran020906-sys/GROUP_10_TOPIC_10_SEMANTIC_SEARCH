@@ -37,6 +37,8 @@
     <div class="search-options">
         <div class="option" id="sql-opt" onclick="setMode('sql')">SQL</div>
         <div class="option" id="vec-opt" onclick="setMode('vec')">VECTOR</div>
+        <div class="option" id="hybrid-opt" onclick="setMode('hybrid')">HYBRID</div>
+
     </div>
 </header>
 
@@ -54,6 +56,10 @@
         <img src="loupe.png"
             class="search-icon"
             onclick="handleSearch()" />
+            
+        <img src="search.png"
+            class="search-by-image-icon"
+            onclick="openLens" />
     </div>
 
     <div class="scroll-text" 
