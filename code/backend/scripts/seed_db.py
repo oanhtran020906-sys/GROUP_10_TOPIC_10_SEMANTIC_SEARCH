@@ -2,7 +2,6 @@ import os
 import sys
 from pathlib import Path
 
-# Bước 1: Fix lỗi import
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.abspath(os.path.join(current_dir, ".."))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -57,7 +56,8 @@ def seed_master_data(cur):
     
     # Insert Categories (Sử dụng ON CONFLICT để tránh lỗi nếu chạy lại script nhiều lần)
     categories = ['camera', 'phones', 'smartwatch', 'tablet', 'keyboard', 
-                  'monitor', 'earphones', 'laptop', 'mouse', 'speaker']
+                  'monitor', 'earphones', 'laptop', 'mouse', 'speaker', 
+                  'president', 'stealthAircraft', 'bomb', 'gun', 'bazooka']
     for cat in categories:
         cur.execute("INSERT INTO categories (name) VALUES (%s) ON CONFLICT (name) DO NOTHING;", (cat,))
 
