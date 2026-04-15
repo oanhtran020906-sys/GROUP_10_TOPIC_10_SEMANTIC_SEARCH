@@ -12,7 +12,6 @@ Hệ thống tìm kiếm sản phẩm thông minh dành cho Laptop và Phụ ki�
 
 ## 🛠 Yêu cầu hệ thống
 - **Python**: 3.9+ (khuyến khích 3.11)
-- **Docker & Docker Compose** (Khuyến khích)
 - **Node.js & npm** (Để chạy Frontend React)
 - **PostgreSQL:** 9+
 - **Qdrant**
@@ -25,7 +24,7 @@ Hệ thống tìm kiếm sản phẩm thông minh dành cho Laptop và Phụ ki�
 
 Di chuyển vào thư mục backend và tạo môi trường ảo:
 ```bash
-cd backend
+cd code/backend
 ```
 
 Điều chỉnh file .env. Copy file: Chạy lệnh 
