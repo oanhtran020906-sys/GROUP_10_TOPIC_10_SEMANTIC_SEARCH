@@ -21,7 +21,7 @@ function render(list) {
                     <img src="${imageUrl}" onerror="this.src='logo 1.png'" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
                 </div>
                 <div class="product-name">${p.name}</div>
-                <div class="product-price">${Number(p.price).toLocaleString()}đ</div>
+                <div class="product-price">${Number(p.price).toLocaleString()}₸</div>
                 ${p.similarity_score ? `<div style="color: #00ffcc; font-size: 11px; margin-top:5px;">Khớp: ${p.similarity_score}%</div>` : ''}
             </div>
         `;
