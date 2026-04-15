@@ -66,7 +66,6 @@ python scripts/seed_db.py
 ```
 
 ``` bash
-python scripts/create_collection.py
 
 python scripts/insert_products_vector.py
 
