@@ -199,16 +199,16 @@ class SearchService:
         try:
             sql = '''
             SELECT product_id, name, brand, price, image_path, description, category_id, budget_id 
-            FROM products WHERE category_id BETWEEN 1 AND 10
+            FROM products
             '''
             params = []
 
-            if category_id:
+            if category_id is not None:
                 sql += " WHERE category_id = %s"
                 params.append(category_id)
-            
-            sql += " ORDER BY RANDOM() LIMIT %s"
-            params.append(limit)
+            else:
+                sql += " WHERE category_id BETWEEN 1 AND 10 ORDER BY RANDOM() LIMIT %s"
+                params.append(limit)
 
             cur.execute(sql, params)
             rows = cur.fetchall()
@@ -224,7 +224,6 @@ class SearchService:
             release_db_connection(conn)
 
     def get_product_by_id(self, product_id: int) -> Optional[Dict]:
-        """Lấy thông tin chi tiết của một sản phẩm dựa trên ID"""
         conn = get_db_connection()
         cur = conn.cursor()
         try:

@@ -69,7 +69,7 @@ async function handleSearch() {
 
     const endpoint = currentSearchMode === 'sql'
     ? '/search/sql'
-    : currentSearchMode === 'vector'
+    : currentSearchMode === 'vec'
         ? '/search/vector'
         : '/search/hybrid';
     
