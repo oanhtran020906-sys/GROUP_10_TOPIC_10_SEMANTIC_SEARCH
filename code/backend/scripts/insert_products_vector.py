@@ -110,9 +110,10 @@ print(f"\n🔄 Inserting into Qdrant...")
 points = []
 for idx, row in df.iterrows():
     point = PointStruct(
-        id=int(idx),
+        id=int(idx+1),
         vector=embeddings[idx].tolist(),
         payload={
+            'product_id': int(id),
             'name': str(row['name']),
             'brand': str(row['brand']) if row['brand'] else '',
             'price': int(row['price']),

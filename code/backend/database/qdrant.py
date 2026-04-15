@@ -149,11 +149,11 @@ class QdrantVectorStore:
     def semantic_search(
         self, 
         query_vector: List[float], 
-        limit: int = 4,
+        limit: int = 8,
         category_filter: Optional[str] = None,
         min_price: Optional[float] = None,
         max_price: Optional[float] = None,
-        score_threshold: float = 0.5
+        score_threshold: float = 0.1
     ) -> List[Dict[str, Any]]:
         """Semantic search với query vector và filters"""
         # Xây dựng filter

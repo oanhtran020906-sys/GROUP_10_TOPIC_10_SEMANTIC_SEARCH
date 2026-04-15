@@ -22,7 +22,7 @@ class SearchService:
             port=settings.QDRANT_PORT
         )
 
-    def semantic_search(self, query: str, limit: int = 5, score_threshold: float = 0.1, filters: Optional[Dict] = None) -> List[Dict]:
+    def semantic_search(self, query: str, limit: int = 8, score_threshold: float = 0.1, filters: Optional[Dict] = None) -> List[Dict]:
         query_vector = self.embedding_service.get_embedding(query)
         
         if hasattr(query_vector, "tolist"):
@@ -52,7 +52,7 @@ class SearchService:
         return formatted_response
 
 
-    def traditional_search(self, query: str, limit: int = 4, category_id: int = None, min_price: float = None, max_price: float = None) -> List[Dict]:
+    def traditional_search(self, query: str, category_id: int = None, min_price: float = None, max_price: float = None) -> List[Dict]:
         conn = get_db_connection()
         cur = conn.cursor()
         try:
@@ -60,7 +60,6 @@ class SearchService:
                 SELECT product_id, name, brand, price, image_path, description, category_id, budget_id 
                 FROM products 
                 WHERE (name ILIKE %s OR description ILIKE %s OR brand ILIKE %s)
-                LIMIT %s
             """
             search_term = f"%{query}%"
             params = [search_term, search_term, search_term]
@@ -74,8 +73,6 @@ class SearchService:
             if max_price:
                 sql += " AND price <= %s"
                 params.append(max_price)
-
-            params.append(limit)
 
             cur.execute(sql, params)
             rows = cur.fetchall()
@@ -172,7 +169,7 @@ class SearchService:
         
         return sorted_results[:limit]
     
-    def image_search(self, image_bytes: bytes, limit: int = 4) -> List[Dict]:
+    def image_search(self, image_bytes: bytes, limit: int = 8) -> List[Dict]:
         img = Image.open(io.BytesIO(image_bytes))
         query_vector = image_embedding_service.get_image_embedding_from_pil(img)
         

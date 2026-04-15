@@ -35,7 +35,7 @@ def setup_image_collection():
     
     # Duyệt qua từng dòng để vectorize
     for index, row in df.iterrows():
-        product_id = index + 1 # Auto increment từ 1
+        product_id = index + 1
         img_relative_path = row['image_path']
         full_img_path = os.path.join(image_base_path, img_relative_path)
 
