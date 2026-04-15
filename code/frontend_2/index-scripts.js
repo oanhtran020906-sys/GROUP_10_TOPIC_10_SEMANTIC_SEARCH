@@ -21,7 +21,7 @@ function render(list) {
                     <img src="${imageUrl}" onerror="this.src='logo 1.png'" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
                 </div>
                 <div class="product-name">${p.name}</div>
-                <div class="product-price">${Number(p.price).toLocaleString()}đ</div>
+                <div class="product-price">${Number(p.price).toLocaleString()}₸</div>
                 ${p.similarity_score ? `<div style="color: #00ffcc; font-size: 11px; margin-top:5px;">Khớp: ${p.similarity_score}%</div>` : ''}
             </div>
         `;
@@ -126,30 +126,30 @@ window.onload = () => {
     }
 };
 
-const modal = document.getElementById("lensModal");
-const openBtn = document.getElementById("openLensBtn");
-const closeBtn = document.getElementById("closeLensBtn");
-const uploadArea = document.getElementById("uploadArea");
-const input = document.getElementById("imageInput");
+
+const modal = document.getElementById("modal"); // modal
+const inputfile = document.getElementById("inputfile"); // input file
 
 // mở popup
-openBtn.onclick = () => {
-  modal.style.display = "flex";
-};
+function handleImageSearch() {
+    modal.style.display = "flex";
+}
 
 // đóng popup
-closeBtn.onclick = () => {
-  modal.style.display = "none";
-};
-
-// click ngoài để đóng
-window.onclick = (e) => {
-  if (e.target === modal) {
+function closePopup() {
     modal.style.display = "none";
-  }
-};
+}
 
-// click vùng upload → mở file
-uploadArea.onclick = () => {
-  input.click();
+// click upload
+function uploadImage() {
+    inputfile.click();
+}
+
+// chọn file
+inputfile.onchange = function () {
+    const uploaded = inputfile.files[0];
+    if (uploaded) {
+        console.log("file:", uploaded);
+        modal.style.display = "none";
+    }
 };

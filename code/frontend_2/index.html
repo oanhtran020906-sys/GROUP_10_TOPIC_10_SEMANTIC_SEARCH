@@ -53,14 +53,28 @@
 
     <div class="big-search-wrapper">
         <input type="text" class="big-search-bar" id="search-input" placeholder="Tìm kiếm...">
+        <!-- Tìm bằng text --> 
         <img src="loupe.png"
             class="search-icon"
             onclick="handleSearch()" />
-            
+
+        <!-- Tìm bằng image -->    
         <img src="search.png"
             class="search-by-image-icon"
-            onclick="openLens" />
+            onclick="handleImageSearch()" />
     </div>
+
+    <!-- popup -->
+<div id="modal" class="modal">
+    <div class="box">
+        <span onclick="closePopup()">×</span>
+
+        <div class="upload" onclick="uploadImage()">
+            <input type="file" id="inputfile" hidden>
+            <p>Click để upload ảnh</p>
+        </div>
+    </div>
+</div>
 
     <div class="scroll-text" 
         onclick="document.getElementById('product-section').scrollIntoView()" style="cursor:pointer">
