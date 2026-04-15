@@ -90,7 +90,7 @@ async def hybrid_search(
 @app.post("/search/image", response_model=List[ProductResponse])
 async def image_search(
     file: UploadFile = File(...),
-    limit: int = Query(12, ge=1, le=50)
+    limit: int = Query(8, ge=1, le=50)
 ):
     
         contents = await file.read()

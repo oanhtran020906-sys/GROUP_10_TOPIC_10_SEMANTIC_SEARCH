@@ -197,7 +197,10 @@ class SearchService:
         conn = get_db_connection()
         cur = conn.cursor()
         try:
-            sql = "SELECT product_id, name, brand, price, image_path, description, category_id, budget_id FROM products"
+            sql = '''
+            SELECT product_id, name, brand, price, image_path, description, category_id, budget_id 
+            FROM products WHERE category_id BETWEEN 1 AND 10
+            '''
             params = []
 
             if category_id:
