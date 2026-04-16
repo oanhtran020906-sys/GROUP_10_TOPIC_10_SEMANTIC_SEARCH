@@ -66,6 +66,12 @@
     <div class="scroll-text" 
         onclick="document.getElementById('product-section').scrollIntoView()" style="cursor:pointer">
     ▼ SIÊU PHẨM CÔNG NGHỆ 2026 ▼
+    
+    <div id="loading" style="display: none; text-align: center; padding: 50px;">
+        <div class="spinner" style="border: 4px solid rgba(0, 255, 255, 0.1); border-left-color: cyan; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px;"></div>
+        <p style="color: cyan; font-family: 'Press Start 2P'; font-size: 10px;">SEARCHING...</p>
+    </div>
+
     </div>
 </div>
 
@@ -100,6 +106,11 @@
     <div class="products-grid" id="product-display"></div>
 </main>
 
+<style>
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+</style>
 
 <!-- LINK JS -->
 <script src="index-scripts.js"></script>

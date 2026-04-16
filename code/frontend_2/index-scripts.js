@@ -67,6 +67,13 @@ async function handleSearch() {
     const query = document.getElementById('search-input').value;
     if (!query.trim()) return;
 
+    const container = document.getElementById('product-display');
+    const loading = document.getElementById('loading');
+    
+    // --- BẮT ĐẦU LOADING ---
+    container.style.opacity = "0.3"; // Làm mờ danh sách cũ
+    loading.style.display = "block"; // Hiện thông báo loading
+
     const endpoint = currentSearchMode === 'sql'
     ? '/search/sql'
     : currentSearchMode === 'vec'
@@ -76,11 +83,16 @@ async function handleSearch() {
     try {
         const response = await fetch(`${API_URL}${endpoint}?q=${encodeURIComponent(query)}`);
         const data = await response.json();
+        
         render(data);
         document.getElementById('cat-name').innerText = "KẾT QUẢ";
         document.getElementById('product-section').scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
         console.error("Lỗi search:", error);
+    } finally {
+        // --- KẾT THÚC LOADING ---
+        loading.style.display = "none";
+        container.style.opacity = "1";
     }
 }
 
@@ -173,6 +185,16 @@ document.getElementById('inputfile').onchange = function (event) {
 async function executeImageSearch() {
     if (!selectedFile) return;
 
+    const loading = document.getElementById('loading');
+    const container = document.getElementById('product-display');
+    const searchBtn = document.getElementById('search-btn');
+
+    // Vừa hiện loading vừa đổi text nút search cho ngầu
+    loading.style.display = "block";
+    container.style.opacity = "0.3";
+    searchBtn.innerText = "ANALYZING...";
+    searchBtn.disabled = true;
+
     const formData = new FormData();
     formData.append('file', selectedFile);
 
@@ -186,12 +208,14 @@ async function executeImageSearch() {
         render(data);
         document.getElementById('cat-name').innerText = "KẾT QUẢ ẢNH";
         document.getElementById('product-section').scrollIntoView({ behavior: 'smooth' });
-        
-        // Theo ý bạn: Không đóng popup, để người dùng tự nhấn X
-        console.log("Tìm kiếm ảnh thành công!");
     } catch (error) {
         console.error("Lỗi search ảnh:", error);
-        alert("Lỗi kết nối server!");
+    } finally {
+        // Trả lại trạng thái cũ
+        loading.style.display = "none";
+        container.style.opacity = "1";
+        searchBtn.innerText = "SEARCH NOW";
+        searchBtn.disabled = false;
     }
 }
 
