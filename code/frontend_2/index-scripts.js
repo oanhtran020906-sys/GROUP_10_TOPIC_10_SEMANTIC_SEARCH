@@ -83,7 +83,6 @@ async function handleSearch() {
         console.error("Lỗi search:", error);
     }
 }
-// 5. Hàm Search by image
 
 
 // --- Các hàm hỗ trợ UI ---
@@ -113,39 +112,21 @@ function toggleMenu() {
     document.getElementById('overlay').classList.toggle('active');
 }
 
-// Khởi chạy khi trang web sẵn sàng
-window.onload = () => {
-    loadInitialProducts();
-    
-    // Gán sự kiện Enter cho ô search
-    const input = document.getElementById('search-input');
-    if (input) {
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSearch();
-        });
-    }
-};
+const modal = document.getElementById("modal");
+const inputfile = document.getElementById("inputfile");
 
-
-const modal = document.getElementById("modal"); // modal
-const inputfile = document.getElementById("inputfile"); // input file
-
-// mở popup
 function handleImageSearch() {
     modal.style.display = "flex";
 }
 
-// đóng popup
 function closePopup() {
     modal.style.display = "none";
 }
 
-// click upload
 function uploadImage() {
     inputfile.click();
 }
 
-// chọn file
 inputfile.onchange = function () {
     const uploaded = inputfile.files[0];
     if (uploaded) {

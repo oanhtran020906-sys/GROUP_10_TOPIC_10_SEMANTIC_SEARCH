@@ -61,17 +61,18 @@
         <!-- Tìm bằng image -->    
         <img src="search.png"
             class="search-by-image-icon"
-            onclick="handleImageSearch()" />
+            onclick="handleImageSearch()" /> <!--Mở popup bằng cách click vào icon-->
     </div>
 
     <!-- popup -->
 <div id="modal" class="modal">
     <div class="box">
-        <span onclick="closePopup()">×</span>
-
+        <span class="exit-icon" onclick="closePopup()">×</span>
+    <div class="box-content"></div>  
+        <img class="image-icon" src="image.png"/>
         <div class="upload" onclick="uploadImage()">
             <input type="file" id="inputfile" hidden>
-            <p>Click để upload ảnh</p>
+            <p class ="text-upload"> Upload Image </p>
         </div>
     </div>
 </div>
