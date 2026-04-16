@@ -64,12 +64,16 @@ header {
     width: 26px;
     cursor: pointer;
 }
+
 .modal {
-    display: none; /* Ẩn ban đầu */
-    top: 20px;
     position: fixed;
+    display: none; /* Ẩn ban đầu */
+    top: 56%;
+    left: 34%;
     z-index: 999;
+    
 }
+
 
 .box {
     border-radius: 30px;
@@ -95,40 +99,48 @@ header {
         0 0 10px #ffffff,
         0 0 20px #ffffff;
 }
+
 .text-upload{
-    position: absolute;
-    top: 150px;
-    right: 100px;
-    letter-spacing: 3px;
+    font-size :30px;  
+    
     font-weight: bolder;
+}
+.image-icon{
+    filter: invert(1);
+    width: 80px;
+}
+
+.uploadpack{
+    display: flex;
+    justify-content: center; /* Căn giữa ngang */
+    align-items: center;     /* Căn giữa dọc */
+    flex-direction: column;  /* Xếp icon và chữ theo hàng dọc nếu cần */
+    text-align: center;
+    opacity:0.6;
     transition: all 0.5s ease;
     
 }
-
-.text-upload:hover{
+.uploadpack:hover{
+    opacity:1;
+    transform: scale(1.1);
     text-shadow: 0 0 10px #ffffff;
-    
-}
-.image-icon{
-    position: absolute;
-    top: 100px;
-    right: 350px;
-    width: 80px;
-}
-.image-icon:hover{
-    filter: 0 0 10px #000000;;
-}
-.exit-icon {
-    position: absolute;
-    top: 30px;
-    right: 20px;
-    cursor: pointer;
-    font-family: "Press Start 2P";
-    font-size: 50px;
-    
-    
+
 }
 
+.exit-icon {
+    opacity: 0.6;
+    position: absolute;
+    top: 1px;
+    right: 30px;
+    cursor: pointer;
+    font-size: 50px;
+    z-index: 90;
+}
+.exit-icon:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    text-shadow: 0 0 10px #ffffff;
+}
 .upload {
     padding: 30px;
     text-align: center;
@@ -335,7 +347,7 @@ header {
     cursor: pointer;
     opacity: 0.6;
 
-    font-size: 20px;
+    font-size: 30px;
     color: white;
     text-align: center;
 
