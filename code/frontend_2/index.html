@@ -42,59 +42,50 @@
     </div>
 </header>
 
-<div class="hero-section">
-    <div class="brand-logo-big" onclick="location.reload()" style="cursor:pointer">
+<div class="hero-section" style="position: relative;"> <div class="brand-logo-big" onclick="location.reload()" style="cursor:pointer">
         <span class="brand-techna">Techna</span><span class="brand-lg">LG</span>
     </div>
 
     <p class="hero-subtitle">
-    Empowering Digital Change
+        Empowering Digital Change
     </p>
 
     <div class="big-search-wrapper">
         <input type="text" class="big-search-bar" id="search-input" placeholder="Tìm kiếm...">
-        <!-- Tìm bằng text --> 
-        <img src="loupe.png"
-            class="search-icon"
-            onclick="handleSearch()" />
+        <img src="loupe.png" class="search-icon" onclick="handleSearch()" />
 
-        <!-- Tìm bằng image -->    
-        <img src="search.png"
-            class="search-by-image-icon"
-            onclick="handleImageSearch()" /> <!--Mở popup bằng cách click vào icon-->
+        <img src="search.png" class="search-by-image-icon" onclick="handleImageSearch()" />
     </div>
-    <div class="scroll-text" 
-        onclick="document.getElementById('product-section').scrollIntoView()" style="cursor:pointer">
-    ▼ SIÊU PHẨM CÔNG NGHỆ 2026 ▼
-    
-    <div id="loading" style="display: none; text-align: center; padding: 50px;">
+
+    <div class="scroll-text" onclick="document.getElementById('product-section').scrollIntoView()" style="cursor:pointer">
+        ▼ SIÊU PHẨM CÔNG NGHỆ 2026 ▼
+    </div>
+
+    <div id="loading" style="display: none; text-align: center; padding: 20px;">
         <div class="spinner" style="border: 4px solid rgba(0, 255, 255, 0.1); border-left-color: cyan; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px;"></div>
         <p style="color: cyan; font-family: 'Press Start 2P'; font-size: 10px;">SEARCHING...</p>
     </div>
 
-    </div>
-</div>
-
-    <!-- popup -->
-<div id="modal" class="modal" style="display: none; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
-    <div class="box" style="position: relative; cursor: default;">
-        <span class="exit-icon" onclick="closePopup()" style="position: absolute; right: 15px; top: 10px; cursor: pointer; z-index: 10;">×</span>
-        
-        <div class="uploadpack" onclick="uploadImage()" style="cursor: pointer;">
-            <img id="preview-img" src="" style="display: none; max-width: 200px; max-height: 200px; object-fit: contain; margin-bottom: 10px; filter: none !important;">
+    <div id="modal" class="modal" style="display: none; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background: rgba(0, 0, 0, 0.7);">
+        <div class="box" style="position: relative; cursor: default;">
+            <span class="exit-icon" onclick="closePopup()" style="position: absolute; right: 15px; top: 10px; cursor: pointer; z-index: 10;">×</span>
             
-            <img id="default-icon" class="image-icon" src="image.png">
-            
-            <div class="upload">
-                <input type="file" id="inputfile" hidden>
-                <p class="text-upload" id="upload-text"> UPLOAD IMAGE </p>
+            <div class="uploadpack" onclick="uploadImage()" style="cursor: pointer;">
+                <img id="preview-img" src="" style="display: none; max-width: 200px; max-height: 200px; object-fit: contain; margin-bottom: 10px; filter: none !important;">
+                
+                <img id="default-icon" class="image-icon" src="image.png">
+                
+                <div class="upload">
+                    <input type="file" id="inputfile" hidden>
+                    <p class="text-upload" id="upload-text"> UPLOAD IMAGE </p>
+                </div>
             </div>
-        </div>
 
-        <div style="text-align: center; margin-top: 10px;">
-            <button id="search-btn" onclick="executeImageSearch()" style="display: none; padding: 10px 20px; background: #00ffff; color: #000; border: none; font-family: 'Press Start 2P', cursive; cursor: pointer; font-size: 10px; box-shadow: 4px 4px 0px #008080;">
-                SEARCH NOW
-            </button>
+            <div style="text-align: center; margin-top: 10px;">
+                <button id="search-btn" onclick="executeImageSearch()" style="display: none; padding: 10px 20px; background: #00ffff; color: #000; border: none; font-family: 'Press Start 2P', cursive; cursor: pointer; font-size: 10px; box-shadow: 4px 4px 0px #008080;">
+                    SEARCH NOW
+                </button>
+            </div>
         </div>
     </div>
 </div>

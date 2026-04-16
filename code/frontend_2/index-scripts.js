@@ -185,12 +185,10 @@ document.getElementById('inputfile').onchange = function (event) {
 async function executeImageSearch() {
     if (!selectedFile) return;
 
-    const loading = document.getElementById('loading');
     const container = document.getElementById('product-display');
     const searchBtn = document.getElementById('search-btn');
 
     // Vừa hiện loading vừa đổi text nút search cho ngầu
-    loading.style.display = "block";
     container.style.opacity = "0.3";
     searchBtn.innerText = "ANALYZING...";
     searchBtn.disabled = true;
@@ -212,7 +210,6 @@ async function executeImageSearch() {
         console.error("Lỗi search ảnh:", error);
     } finally {
         // Trả lại trạng thái cũ
-        loading.style.display = "none";
         container.style.opacity = "1";
         searchBtn.innerText = "SEARCH NOW";
         searchBtn.disabled = false;
