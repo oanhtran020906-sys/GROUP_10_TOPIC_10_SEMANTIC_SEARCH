@@ -70,20 +70,28 @@
 </div>
 
     <!-- popup -->
-<div id="modal" class="modal">
-    <div class="box">
-        <span class="exit-icon" onclick="closePopup()">×</span>
-        <div class="uploadpack">
-            <img class="image-icon" src="image.png"/>
-            <div class="upload" onclick="uploadImage()">
+<div id="modal" class="modal" style="display: none; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <div class="box" style="position: relative; cursor: default;">
+        <span class="exit-icon" onclick="closePopup()" style="position: absolute; right: 15px; top: 10px; cursor: pointer; z-index: 10;">×</span>
+        
+        <div class="uploadpack" onclick="uploadImage()" style="cursor: pointer;">
+            <img id="preview-img" src="" style="display: none; max-width: 200px; max-height: 200px; object-fit: contain; margin-bottom: 10px; filter: none !important;">
+            
+            <img id="default-icon" class="image-icon" src="image.png">
+            
+            <div class="upload">
                 <input type="file" id="inputfile" hidden>
-                <p class ="text-upload"> UPLOAD IMAGE </p>
+                <p class="text-upload" id="upload-text"> UPLOAD IMAGE </p>
             </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 10px;">
+            <button id="search-btn" onclick="executeImageSearch()" style="display: none; padding: 10px 20px; background: #00ffff; color: #000; border: none; font-family: 'Press Start 2P', cursive; cursor: pointer; font-size: 10px; box-shadow: 4px 4px 0px #008080;">
+                SEARCH NOW
+            </button>
         </div>
     </div>
 </div>
-
-    
 
 <main class="main-content" id="product-section">
     <h2 class="section-title">

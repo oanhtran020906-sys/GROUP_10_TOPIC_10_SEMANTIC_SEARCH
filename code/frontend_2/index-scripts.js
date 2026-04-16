@@ -135,14 +135,75 @@ function closePopup() {
     modal.style.display = "none";
 }
 
+let selectedFile = null;
+
 function uploadImage() {
-    inputfile.click();
+    // Kích hoạt chọn file
+    document.getElementById('inputfile').click();
 }
 
-inputfile.onchange = function () {
-    const uploaded = inputfile.files[0];
-    if (uploaded) {
-        console.log("file:", uploaded);
-        modal.style.display = "none";
+// Xử lý khi chọn file xong
+document.getElementById('inputfile').onchange = function (event) {
+    const file = event.target.files[0];
+    if (file) {
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const previewImg = document.getElementById('preview-img');
+            const defaultIcon = document.getElementById('default-icon');
+            const searchBtn = document.getElementById('search-btn');
+            const uploadText = document.getElementById('upload-text');
+
+            // Hiển thị ảnh preview
+            previewImg.src = e.target.result;
+            previewImg.style.display = "block";
+            previewImg.style.filter = "none"; // Chống đảo màu
+            
+            // Ẩn icon cũ
+            defaultIcon.style.display = "none";
+            
+            // Hiện nút bấm
+            searchBtn.style.display = "inline-block";
+            uploadText.innerText = "CHANGE IMAGE";
+        };
+        reader.readAsDataURL(file);
     }
 };
+
+async function executeImageSearch() {
+    if (!selectedFile) return;
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+        const response = await fetch(`${API_URL}/search/image?limit=8`, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        
+        render(data);
+        document.getElementById('cat-name').innerText = "KẾT QUẢ ẢNH";
+        document.getElementById('product-section').scrollIntoView({ behavior: 'smooth' });
+        
+        // Theo ý bạn: Không đóng popup, để người dùng tự nhấn X
+        console.log("Tìm kiếm ảnh thành công!");
+    } catch (error) {
+        console.error("Lỗi search ảnh:", error);
+        alert("Lỗi kết nối server!");
+    }
+}
+
+function closePopup() {
+    const modal = document.getElementById("modal");
+    modal.style.display = "none";
+    
+    // Reset trạng thái
+    selectedFile = null;
+    document.getElementById('inputfile').value = "";
+    document.getElementById('preview-img').style.display = "none";
+    document.getElementById('default-icon').style.display = "block";
+    document.getElementById('search-btn').style.display = "none";
+    document.getElementById('upload-text').innerText = "UPLOAD IMAGE";
+}
