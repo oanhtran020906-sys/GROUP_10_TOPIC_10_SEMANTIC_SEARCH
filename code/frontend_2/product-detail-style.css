@@ -5,7 +5,7 @@
     box-sizing: border-box;
     font-family: 'Segoe UI', sans-serif;
 }
-/* CHỈNH SỬA SCROLL CHO MƯỢT HƠN */
+
 html {
     scroll-behavior: smooth;
 }
@@ -30,13 +30,13 @@ header {
 }
 /* LOGO */
 .brand-logo-big {
-    font-size: 100px;
+    font-size: 3rem;
     font-weight: bold;
     z-index: 10;
     cursor: pointer;
     position :absolute;
-    top: -20%;
-    right: 35%;
+    top: 28%;
+    right: 80%;
 }
 
 .brand-techna {
@@ -57,127 +57,74 @@ header {
         font-family: "Press Start 2P";
     
 }
-.back_button {
-    cursor:pointer;
-    font-weight: bold;
-    font-size : 25px
-}
-.product-img{
-    width : 100%;
-    aspect-ratio : 16/9;
-    overflow:hidden;
-    border-radius :20px;
-    position: absolute;
-    top: 100%;
-    left: 100%;
-    transform: translate(-50%, -50%);
-}
 
-/* MENU BUTTON */
-.menu-btn {
-    cursor: pointer;
-    font-weight: bold;
-    font-size : 25px
-}
 
-/* SEARCH MODE */
-.search-options {
+
+.product-detail-container {
+    transform:scale(1.6);
     display: flex;
-    gap: 10px;      
-}
-.search-icon {
-    position: absolute;
-    right: 30px;      
-    top: 50%;
-    transform: translateY(-50%);
-
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
+    justify-content: flex-start;
+    align-items: flex-start; /* Giữ các cột luôn bắt đầu từ đỉnh */
+    gap: 40px;               /* Khoảng cách giữa cột trái và cột phải */
+    padding: 50px 5%;
+    color: white;
+    min-height: 50vh;
+    flex: 0 0 600px;         /* Khóa cứng độ rộng cột trái là 600px */  /* Xếp Ảnh lên trên, Bảo hành xuống dưới */
+    gap: 20px;
 }
 
-.search-icon:hover {
-    opacity: 1;
+.product-image-box {
+    flex: 0 0 600px;           
+    height: 400px;             
+    background-color: #ffffff; 
+    border-radius: 20px;       
+    overflow: hidden;          
+    display: flex;
+    align-items: center;
+    justify-content: center;  
 }
 
-/* Trạng thái mặc định (khi chưa ấn) */
-.option {
-    padding: 8px 18px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 25px;
-    color: #888;
-    background: rgb(255 0 0 / 0%);
-    transition: 0.4s cubic-bezier(0.86, -0.03, 0, 1);
-    border: 3px solid rgb(255 255 255);
+.product-image-box img {
+    width: 90%;            
+    height: 90%;
+    object-fit: contain;    
+    object-position: center;
 }
 
-/* Khi SQL được chọn: Hiện màu Tím */
-#sql-opt.active {
-    background: var(--brand-techna); 
-    color: #feaaff;
+
+
+.product-info {
+    flex: 1;                 /* Tự động dãn phần còn lại */
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    font-size : 200%; 
+    gap: 6px /* Xếp Tên -> Giá -> Mô tả từ trên xuống */
+}
+
+.product-info h1{
+    margin-top: -15px;
+    font-size: 50px;
     font-weight: bold;
-    box-shadow: 0 0 20px rgb(254 180 255);
-    border-color: var(--brand-techna);
+    line-height: 1.3;
 }
 
-/* Khi VECTOR được chọn: Hiện màu Xanh */
-#vec-opt.active {
-    background: var(--brand-lg); 
-    color: #00ffe5;
-    font-weight: bold;
-    box-shadow: 0 0 20px rgb(0 255 229);
-    border-color: var(--brand-lg);
+.price {
+    font-size: 32px;
+    color: #00ffcc;
+    margin-bottom: 25px;
 }
 
-/* ===== SIDEBAR ===== */
-.sidebar {
-    position: fixed;
-    left: -260px;
-    top: 0;
-    width: 260px;
-    height: 100%;
-    background: #111;
-    padding: 20px;
-    transition: 0.3s;
-    z-index: 1001;
+.description {
+    line-height: 1.6;
+    font-size: 16px;
+    opacity: 0.9;
 }
 
-.sidebar.active {
-    left: 0;
-}
-
-.sidebar h2 {
-    font-size: 30px;
-    margin-bottom: 20px;
-    margin-top: 9px;
-    margin-left:10px;
-}
-
-.category-list li {
-    font-size:20px;
-    list-style: none;
-    padding: 20px;
+.button-buy {
     cursor: pointer;
-    border-bottom: 1px solid #6c6c6c4f;
-}
-
-.category-list li:hover {
-    background: #222;
-}
-
-/* OVERLAY */
-.overlay {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: none;
-    z-index: 1000;
-}
-
-.overlay.active {
-    display: block;
+    font-weight: bold;
+    font-size : 50px
 }
 
 
