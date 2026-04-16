@@ -28,6 +28,49 @@ header {
     padding: 0 40px;
     z-index: 1000;
 }
+/* LOGO */
+.brand-logo-big {
+    font-size: 100px;
+    font-weight: bold;
+    z-index: 10;
+    cursor: pointer;
+    
+
+}
+
+.brand-techna {
+    color: #feaaff;
+    text-shadow:
+        0 0 5px #feaaff,
+        0 0 10px #feaaff,
+        0 0 20px #feaaff;
+    font-family: "Press Start 2P";
+}
+
+.brand-lg {
+    color: #00ffe5;
+    text-shadow: 
+        0 0 5px #00ffe5,
+        0 0 10px #00ffe5,
+        0 0 20px #00ffe5;
+        font-family: "Press Start 2P";
+    
+}
+.back_button {
+    cursor:pointer;
+    font-weight: bold;
+    font-size : 25px
+}
+.product-img{
+    width : 100%;
+    aspect-ratio : 16/9;
+    overflow:hidden;
+    border-radius :20px;
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    transform: translate(-50%, -50%);
+}
 
 /* MENU BUTTON */
 .menu-btn {

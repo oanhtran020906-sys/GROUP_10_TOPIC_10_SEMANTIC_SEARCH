@@ -54,3 +54,13 @@ window.onload = async () => {
             </div>`;
     }
 };
+
+document.getElementById('back_button').addEventListener('click', function() {
+    if (document.referrer !== "") {
+        window.history.back();
+    } else {
+        // Nếu không có lịch sử (ví dụ người dùng dán trực tiếp link vào)
+        // thì mới cho quay về trang chủ
+        window.location.href = 'index.html';
+    }
+});
