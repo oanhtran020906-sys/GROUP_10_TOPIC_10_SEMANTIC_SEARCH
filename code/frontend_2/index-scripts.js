@@ -112,6 +112,18 @@ function toggleMenu() {
     document.getElementById('overlay').classList.toggle('active');
 }
 
+window.onload = () => {
+    loadInitialProducts();
+    
+    // Gán sự kiện Enter cho ô search
+    const input = document.getElementById('search-input');
+    if (input) {
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSearch();
+        });
+    }
+};
+
 const modal = document.getElementById("modal");
 const inputfile = document.getElementById("inputfile");
 

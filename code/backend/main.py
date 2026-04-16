@@ -28,7 +28,7 @@ BASE_URL = "http://127.0.0.1:8000"
 #lấy sản phẩm nổi bật
 @app.get("/products", response_model=List[ProductResponse])
 async def get_bestseller(
-    limit: int = Query(4, ge=1, le=50),
+    limit: int = Query(8, ge=1, le=50),
     category_id: Optional[int] = None
 ):
     """Lấy danh sách sản phẩm (dùng cho trang chủ hoặc lọc nhanh)"""
