@@ -128,15 +128,22 @@ function toggleMenu() {
 }
 
 window.onload = () => {
+    // Kiểm tra kiểu điều hướng của trình duyệt
+    const perfEntries = performance.getEntriesByType("navigation");
+    const isBackNavigation = perfEntries.length > 0 && perfEntries[0].type === "back_forward";
+
     const savedResults = sessionStorage.getItem('last_search_results');
     const savedCatName = sessionStorage.getItem('last_category_name');
 
-    if (savedResults) {
-        // Nếu có dữ liệu cũ, render lại dữ liệu đó
+    // CHỈ render lại kết quả cũ nếu đó là thao tác BACK và có dữ liệu lưu trữ
+    if (isBackNavigation && savedResults) {
         render(JSON.parse(savedResults));
         document.getElementById('cat-name').innerText = savedCatName;
     } else {
-        loadInitialProducts();
+        // Nếu là Reload (F5) hoặc vào lần đầu, xóa luôn cache cũ và load mới
+        sessionStorage.removeItem('last_search_results');
+        sessionStorage.removeItem('last_category_name');
+        loadInitialProducts(); // Hàm gọi sản phẩm nổi bật của bạn
     }
     
     // Gán sự kiện Enter cho ô search
@@ -239,4 +246,10 @@ function closePopup() {
     document.getElementById('default-icon').style.display = "block";
     document.getElementById('search-btn').style.display = "none";
     document.getElementById('upload-text').innerText = "UPLOAD IMAGE";
+}
+
+function clearAndHome() {
+    sessionStorage.removeItem('last_search_results'); // Xóa kết quả tìm kiếm đã lưu
+    sessionStorage.removeItem('last_category_name');  // Xóa tên danh mục đã lưu
+    window.location.href = 'index.html';             // Quay về trang chủ sạch sẽ
 }
