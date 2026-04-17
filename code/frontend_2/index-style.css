@@ -12,6 +12,31 @@ html {
     scroll-behavior: smooth;
 }
 /* BODY */
+/* ===== CUSTOM GLOBAL SCROLLBAR ===== */
+/* 1. Thanh cuộn tổng thể */
+::-webkit-scrollbar {
+    width: 10px; /* Độ rộng thanh cuộn dọc */
+    background-color: #0f0f0f; /* Khớp với màu nền body của bạn */
+}
+
+/* 2. Phần rãnh trượt */
+::-webkit-scrollbar-track {
+    background: #0f0f0f;
+}
+
+/* 3. Phần tay trượt (Thumb) */
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00ffe5, #0064ff); /* Màu Vector Blue sang LG Cyan */
+    border-radius: 10px;
+    border: 2px solid #0f0f0f; /* Tạo khoảng cách để thanh cuộn trông thanh thoát hơn */
+}
+
+/* 4. Hiệu ứng khi di chuột vào thanh cuộn */
+::-webkit-scrollbar-thumb:hover {
+    background: #00ffe5; 
+    box-shadow: 0 0 10px #00ffe5;
+}
+
 body {
     background: #0f0f0f;
     color: #fff;
@@ -196,11 +221,17 @@ header {
     left: -350px;
     top: 0;
     width: 350px;
-    height: 100%;
+    height: 100vh;
     background: #111;
     padding: 20px;
     transition: 0.3s;
     z-index: 1001;
+    
+    /* CÁC DÒNG QUAN TRỌNG ĐỂ XÓA CUỘN NGANG */
+    box-sizing: border-box; 
+    overflow-x: hidden;    
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar h2 {
@@ -218,7 +249,24 @@ header {
     left: 0;
 }
 
+/*  bao bọc danh sách và cho phép cuộn */
+.category-list {
+    overflow-y: auto;   
+    overflow-x: hidden; /* Chặn cuộn ngang ở danh sách */
+    flex-grow: 1;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
 
+/* Tùy chỉnh thanh cuộn cho "ngầu" (tùy chọn) */
+.category-list::-webkit-scrollbar {
+    width: 5px;
+}
+.category-list::-webkit-scrollbar-thumb {
+    background: #00ccff;
+    border-radius: 10px;
+}
 
 .category-list li {
     margin: 6px 0;

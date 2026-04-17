@@ -1,4 +1,5 @@
 /* RESET */
+
 * {
     margin: 0;
     padding: 0;
@@ -19,24 +20,36 @@ body {
 header {
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100px;
-    background: rgb(0 0 0 / 63%);
+    background: rgba(0, 0, 0, 0.8); /* Tăng độ đậm nền để dễ nhìn chữ */
+    backdrop-filter: blur(10px);    /* Hiệu ứng mờ nền hiện đại */
+    display: flex;                  /* Kích hoạt Flexbox */
+    align-items: center;            /* Căn giữa tất cả theo chiều dọc */
+    justify-content: flex-start;    /* Sắp xếp các phần tử từ trái sang */
+    padding: 0 50px;                /* Khoảng cách an toàn 2 bên viền */
+    z-index: 1000;
+    gap: 30px;                      /* Khoảng cách cố định giữa nút Back và Logo */
+}
+
+/* NÚT BACK (Nếu bạn chưa có class này, hãy thêm vào thẻ chứa nút Back) */
+#back_button {
+    flex-shrink: 0;                 /* Không cho phép nút này bị thu nhỏ */
+    white-space: nowrap;            /* Không cho chữ xuống dòng */
+    z-index: 11;
+}
+
+/* LOGO - Sửa lại quan trọng nhất ở đây */
+.brand-logo-big {
+    /* XÓA BỎ position: absolute; top: 28%; right: 80%; */
+    position: relative;             
+    font-size: 2.5rem;              /* Giảm kích thước xuống một chút để cân đối */
+    font-weight: bold;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
-    z-index: 1000;
-}
-/* LOGO */
-.brand-logo-big {
-    font-size: 3rem;
-    font-weight: bold;
-    z-index: 10;
-    cursor: pointer;
-    position :absolute;
-    top: 28%;
-    right: 80%;
+    flex-shrink: 0;                 /* Giữ nguyên kích thước logo không bị ép */
 }
 
 .brand-techna {
@@ -61,37 +74,37 @@ header {
 
 
 .product-detail-container {
-    transform:scale(1.6);
+    /* Xóa bỏ transform: scale(1.6) - Đây là nguyên nhân chính gây tràn */
     display: flex;
-    justify-content: flex-start;
-    align-items: flex-start; /* Giữ các cột luôn bắt đầu từ đỉnh */
-    gap: 40px;               /* Khoảng cách giữa cột trái và cột phải */
-    padding: 50px 5%;
+    flex-wrap: wrap;            /* Cho phép ảnh và chữ xếp chồng khi màn hình nhỏ */
+    justify-content: center;    /* Căn giữa toàn bộ nội dung */
+    align-items: flex-start; 
+    gap: 50px;                  /* Khoảng cách giữa ảnh và chữ */
+    padding: 150px 5% 50px;     /* Top 150px để không bị Header đè lên */
     color: white;
-    min-height: 50vh;
-    flex: 0 0 600px;         /* Khóa cứng độ rộng cột trái là 600px */  /* Xếp Ảnh lên trên, Bảo hành xuống dưới */
-    gap: 20px;
+    min-height: 100vh;
+    width: 100%;                /* Đảm bảo rộng hết màn hình */
+    box-sizing: border-box;
 }
 
 .product-image-box {
-    flex: 0 0 600px;           
-    height: 400px;             
+    flex: 0 1 600px;           /* Cho phép co lại nếu màn hình hẹp hơn 600px */
+    width: 100%;
+    height: 500px;             /* Tăng chiều cao một chút cho cân đối */
     background-color: #ffffff; 
     border-radius: 20px;       
     overflow: hidden;          
     display: flex;
     align-items: center;
-    justify-content: center;  
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2); /* Thêm chút hiệu ứng Cyber */
 }
-
 .product-image-box img {
     width: 90%;            
     height: 90%;
     object-fit: contain;    
     object-position: center;
 }
-
-
 
 .product-info {
     flex: 1;                 /* Tự động dãn phần còn lại */

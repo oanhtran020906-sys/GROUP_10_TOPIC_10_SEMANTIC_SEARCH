@@ -56,12 +56,13 @@ window.onload = async () => {
 };
 
 document.getElementById('back_button').addEventListener('click', function() {
-    if (document.referrer !== "") {
+    // Kiểm tra xem có trang trước đó trong lịch sử không
+    if (document.referrer.includes(window.location.hostname)) {
         window.history.back();
     } else {
-        // Nếu không có lịch sử (ví dụ người dùng dán trực tiếp link vào)
-        // thì mới cho quay về trang chủ
+        // Nếu vào trực tiếp bằng link, quay về trang chủ
         window.location.href = 'index.html';
     }
+
 });
 

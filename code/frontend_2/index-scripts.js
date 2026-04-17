@@ -26,6 +26,9 @@ function render(list) {
             </div>
         `;
     }).join('');
+
+    sessionStorage.setItem('last_search_results', JSON.stringify(list));
+    sessionStorage.setItem('last_category_name', document.getElementById('cat-name').innerText);
 }
 
 // 2. Hàm gọi API lấy sản phẩm nổi bật (Thay thế window.onload cũ)
@@ -125,7 +128,16 @@ function toggleMenu() {
 }
 
 window.onload = () => {
-    loadInitialProducts();
+    const savedResults = sessionStorage.getItem('last_search_results');
+    const savedCatName = sessionStorage.getItem('last_category_name');
+
+    if (savedResults) {
+        // Nếu có dữ liệu cũ, render lại dữ liệu đó
+        render(JSON.parse(savedResults));
+        document.getElementById('cat-name').innerText = savedCatName;
+    } else {
+        loadInitialProducts();
+    }
     
     // Gán sự kiện Enter cho ô search
     const input = document.getElementById('search-input');
