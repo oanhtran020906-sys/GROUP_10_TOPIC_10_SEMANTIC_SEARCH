@@ -56,8 +56,7 @@ def seed_master_data(cur):
     
     # Insert Categories (Sử dụng ON CONFLICT để tránh lỗi nếu chạy lại script nhiều lần)
     categories = ['camera', 'phones', 'smartwatch', 'tablet', 'keyboard', 
-                  'monitor', 'earphones', 'laptop', 'mouse', 'speaker', 
-                  'president', 'stealthAircraft', 'bomb', 'gun', 'bazooka']
+                  'monitor', 'earphones', 'laptop', 'mouse', 'speaker']
     for cat in categories:
         cur.execute("INSERT INTO categories (name) VALUES (%s) ON CONFLICT (name) DO NOTHING;", (cat,))
 
